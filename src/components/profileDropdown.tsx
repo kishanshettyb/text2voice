@@ -10,11 +10,10 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { LogOut } from 'lucide-react'
 type Checked = DropdownMenuCheckboxItemProps['checked']
 
 export function ProfileDropdown() {
-  const [showStatusBar, setShowStatusBar] = React.useState<Checked>(true)
-  const [showActivityBar, setShowActivityBar] = React.useState<Checked>(false)
   const [showPanel, setShowPanel] = React.useState<Checked>(false)
 
   return (
@@ -26,20 +25,10 @@ export function ProfileDropdown() {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>Appearance</DropdownMenuLabel>
+        <DropdownMenuLabel>example@gmail.com</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuCheckboxItem checked={showStatusBar} onCheckedChange={setShowStatusBar}>
-          Status Bar
-        </DropdownMenuCheckboxItem>
-        <DropdownMenuCheckboxItem
-          checked={showActivityBar}
-          onCheckedChange={setShowActivityBar}
-          disabled
-        >
-          Activity Bar
-        </DropdownMenuCheckboxItem>
         <DropdownMenuCheckboxItem checked={showPanel} onCheckedChange={setShowPanel}>
-          Panel
+          <LogOut size="20" className="mr-2" /> Signout
         </DropdownMenuCheckboxItem>
       </DropdownMenuContent>
     </DropdownMenu>
