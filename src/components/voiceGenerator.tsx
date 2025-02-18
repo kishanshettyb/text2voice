@@ -13,7 +13,7 @@ import { speechSchema } from '@/schema/speechSchema'
 const formSchema = speechSchema
 
 function VoiceGenerator() {
-  const [texts, setTexts] = useState('')
+  const [texts] = useState('')
   const [audioUrl, setAudioUrl] = useState('')
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -28,7 +28,7 @@ function VoiceGenerator() {
     handleGenerateSpeech(values)
   }
 
-  const handleGenerateSpeech = async (values) => {
+  const handleGenerateSpeech = async (values: z.infer<typeof formSchema>) => {
     const response = await fetch('../api/tts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -58,7 +58,6 @@ function VoiceGenerator() {
                         <Textarea
                           className="border-zinc-600 rounded-lg active:border-zinc-500 focus:border-zinc-500 text-white"
                           placeholder="Type here..."
-                          onChange={(e) => setTexts(e.target.value)}
                           {...field}
                         />
                       </FormControl>
