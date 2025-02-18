@@ -9,6 +9,7 @@ import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { speechSchema } from '@/schema/speechSchema'
+import { SpeedSelect } from '@/components/speedSelect'
 
 const formSchema = speechSchema
 
@@ -45,10 +46,17 @@ function VoiceGenerator() {
     <>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <div className="flex flex-row gap-x-6 p-6">
-            <div className="w-3/4">
+          <div className="flex flex-col md:flex-row gap-x-6 gap-y-6 lg:gap-y-0 p-6">
+            <div className="w-full md:w-3/4">
               <div className="border rounded-xl bg-zinc-800 border-zinc-700 p-6">
-                <VoiceModal />
+                <div className="flex mb-5 flex-row items-center justify-start gap-x-4">
+                  <div>
+                    <VoiceModal />
+                  </div>
+                  <div>
+                    <SpeedSelect />
+                  </div>
+                </div>
                 <FormField
                   control={form.control}
                   name="text"
@@ -67,7 +75,7 @@ function VoiceGenerator() {
                 />
               </div>
             </div>
-            <div className="w-1/4">
+            <div className="w-full md:w-1/4">
               <div className="border rounded-xl bg-zinc-800 border-zinc-700  p-5">
                 {audioUrl != '' ? (
                   <div className="border rounded-2xl text-white flex justify-center items-center border-zinc-700 p-4">
