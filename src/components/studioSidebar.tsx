@@ -8,8 +8,8 @@ function StudioSidebar() {
         <p className="text-white font-semibold">LOGO</p>
       </div>
       <div className="px-5">
-        <div className="rounded-2xl hover:cursor-pointer hover:animate-pulse border border-green-600 bg-green-500 hover:bg-green-400 shadow-2xl shadow-green-800 p-4 text-semibold flex justify-center items-center">
-          <Plus size="20" className="mr-2" /> Create New File
+        <div className="rounded-xl text-lg hover:cursor-pointer hover:animate-pulse border border-green-600 bg-green-500 hover:bg-green-400 shadow-2xl shadow-green-800 p-4 text-semibold flex justify-center items-center">
+          <Plus size="24" className="mr-2" /> Create New File
         </div>
       </div>
     </div>
