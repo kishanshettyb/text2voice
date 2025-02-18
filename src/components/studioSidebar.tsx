@@ -1,5 +1,6 @@
 import React from 'react'
 import { Plus } from 'lucide-react'
+import { Button } from './ui/button'
 
 function StudioSidebar() {
   return (
@@ -8,9 +9,10 @@ function StudioSidebar() {
         <p className="text-white font-semibold">LOGO</p>
       </div>
       <div className="px-5">
-        <div className="rounded-xl text-lg hover:cursor-pointer hover:animate-pulse border border-green-600 bg-green-500 hover:bg-green-400 shadow-2xl shadow-green-800 p-4 text-semibold flex justify-center items-center">
-          <Plus size="24" className="mr-2" /> Create New File
-        </div>
+        <Button className="w-full p-5 text-lg shadow-2xl shadow-green-800 hover:bg-green-400 hover:animate-pulse bg-green-500 text-black">
+          <Plus size="24" className="mr-2" />
+          Create New File
+        </Button>
       </div>
     </div>
   )
