@@ -15,7 +15,7 @@ export function VoiceModal() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="border-zinc-600 bg-zinc-700 border mb-5">
+        <Button className="border-zinc-600 bg-zinc-700 border">
           <Volume2 /> Voice
           <ChevronDown />
         </Button>
