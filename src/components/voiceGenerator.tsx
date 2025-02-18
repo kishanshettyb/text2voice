@@ -24,15 +24,15 @@ function VoiceGenerator() {
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+    console.log(JSON.stringify(values) + JSON.stringify(texts))
     handleGenerateSpeech(values)
   }
 
-  const handleGenerateSpeech = async () => {
+  const handleGenerateSpeech = async (values) => {
     const response = await fetch('../api/tts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ texts })
+      body: JSON.stringify(values)
     })
 
     const data = await response.json()
