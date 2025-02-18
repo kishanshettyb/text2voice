@@ -7,8 +7,8 @@ import { Input } from '@/components/ui/input'
 function StudioHeader() {
   return (
     <div className="px-6 py-3 border border-x-0 border-zinc-700 border-t-0 w-auto flex-1 flex items-center justify-between">
-      <div className="flex gap-x-5 justify-end items-center">
-        <div className="w-[250px]">
+      <div className="md:flex hidden gap-x-5 justify-end items-center">
+        <div className="md:w-[250px]">
           <Input
             placeholder="Enter Title"
             className="border-zinc-800 text-white placeholder:text-zink-700"
