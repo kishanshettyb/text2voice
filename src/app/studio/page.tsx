@@ -1,7 +1,12 @@
+import VoiceGenerator from '@/components/voiceGenerator'
 import React from 'react'
 
 function Page() {
-  return <div></div>
+  return (
+    <div>
+      <VoiceGenerator />
+    </div>
+  )
 }
 
 export default Page
