@@ -10,12 +10,17 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { speechSchema } from '@/schema/speechSchema'
 import { SpeedSelect } from '@/components/speedSelect'
+import useVoiceStore from '@/store/speed'
 
 const formSchema = speechSchema
+interface RequestData {
+  text: string
+  speed: string
+}
 
 function VoiceGenerator() {
-  const [texts] = useState('')
-  const [audioUrl, setAudioUrl] = useState('')
+  const voiceSpeed = useVoiceStore((state) => state.voiceSpeed) || '1.0x'
+  const [audioUrl, setAudioUrl] = useState<string>('')
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -25,15 +30,19 @@ function VoiceGenerator() {
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(JSON.stringify(values) + JSON.stringify(texts))
-    handleGenerateSpeech(values)
+    console.log(JSON.stringify(values) + voiceSpeed)
+    const requestData = {
+      ...values,
+      speed: voiceSpeed
+    }
+    handleGenerateSpeech(requestData)
   }
 
-  const handleGenerateSpeech = async (values: z.infer<typeof formSchema>) => {
+  const handleGenerateSpeech = async (requestData: RequestData) => {
     const response = await fetch('../api/tts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(values)
+      body: JSON.stringify(requestData)
     })
 
     const data = await response.json()

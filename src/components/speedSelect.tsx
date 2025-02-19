@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Select,
   SelectContent,
@@ -9,13 +9,14 @@ import {
   SelectValue
 } from '@/components/ui/select'
 import { CircleGauge } from 'lucide-react'
+import useVoiceStore from '@/store/speed'
 
 export function SpeedSelect() {
-  const [selectedValue, setSelectedValue] = useState('1.0x')
+  const { voiceSpeed, setVoiceSpeed } = useVoiceStore()
 
   return (
     <div className="relative">
-      <Select value={selectedValue} onValueChange={setSelectedValue}>
+      <Select value={voiceSpeed} onValueChange={setVoiceSpeed}>
         <CircleGauge size="16" className="absolute text-white left-[16px] top-[10px]" />
         <SelectTrigger className="w-[110px] border-zinc-600 text-white bg-zinc-700 border pl-10">
           <SelectValue className="text-zinc-500" placeholder="Select Speed" />

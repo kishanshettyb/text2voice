@@ -7,7 +7,9 @@ const client = new textToSpeech.TextToSpeechClient()
 
 export async function POST(req: Request) {
   try {
-    const { text, voice = 'en-US-Wavenet-D', audioFormat = 'MP3' } = await req.json()
+    const { text, voice = 'en-US-Wavenet-D', audioFormat = 'MP3', speed } = await req.json()
+    const value = speed
+    const voiceSpeed = parseFloat(value)
 
     if (!text) {
       return NextResponse.json({ error: 'Text is required' }, { status: 400 })
@@ -20,7 +22,8 @@ export async function POST(req: Request) {
         name: voice
       },
       audioConfig: {
-        audioEncoding: audioFormat
+        audioEncoding: audioFormat,
+        speakingRate: voiceSpeed
       }
     }
 
