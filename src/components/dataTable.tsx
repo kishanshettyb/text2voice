@@ -54,7 +54,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
         />
       </div>
 
-      <div className="rounded-md overflow-scroll h-[500px] mb-5 text-white border-zinc-800 bg-zinc-950 border">
+      <div className="rounded-md overflow-y-scroll overflow-x-hidden h-[350px] mb-5 text-white border-zinc-800 bg-zinc-950 border">
         <Table className="border-zinc-800">
           <TableHeader className="border-zinc-900">
             {table.getHeaderGroups().map((headerGroup) => (

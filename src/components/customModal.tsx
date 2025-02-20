@@ -32,7 +32,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
           <DialogTitle className="text-zinc-200">{title}</DialogTitle>
           <DialogDescription className="text-zinc-200">{desc}</DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 h-[650px]">{children}</div>
+        <div className="grid gap-4 h-[500px]">{children}</div>
       </DialogContent>
     </Dialog>
   )
