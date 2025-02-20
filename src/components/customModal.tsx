@@ -7,17 +7,22 @@ import {
   DialogTitle
 } from '@/components/ui/dialog'
 
-interface Props {
-  isOpen?: boolean
-  onClose?: () => void
-  title: string
-  desc?: string
-  size?: string
+interface CustomModalProps {
+  isOpen: boolean
+  onClose: () => void
   modalSize?: string
-  children: React.ReactNode
+  title: string
+  desc: string
+  children?: React.ReactNode // children prop
 }
-
-export function CustomModal({ isOpen, onClose, title, desc, children, modalSize }: Props) {
+const CustomModal: React.FC<CustomModalProps> = ({
+  isOpen,
+  onClose,
+  children,
+  title,
+  desc,
+  modalSize
+}) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
@@ -32,3 +37,4 @@ export function CustomModal({ isOpen, onClose, title, desc, children, modalSize 
     </Dialog>
   )
 }
+export default CustomModal
