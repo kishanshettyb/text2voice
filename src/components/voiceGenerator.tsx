@@ -1,8 +1,7 @@
 'use client'
 import { Textarea } from '@/components/ui/textarea'
 import React, { useState } from 'react'
-import { Zap } from 'lucide-react'
-import { VoiceModal } from './voiceModal'
+import { ChevronDown, Volume2, Zap } from 'lucide-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -11,6 +10,8 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from '@/component
 import { speechSchema } from '@/schema/speechSchema'
 import { SpeedSelect } from '@/components/speedSelect'
 import useVoiceStore from '@/store/speed'
+import Voicetable from '@/components/voiceTable'
+import CustomModal from '@/components/customModal'
 
 const formSchema = speechSchema
 interface RequestData {
@@ -19,6 +20,7 @@ interface RequestData {
 }
 
 function VoiceGenerator() {
+  const [isOpen, setIsOpen] = useState(false)
   const voiceSpeed = useVoiceStore((state) => state.voiceSpeed) || '1.0x'
   const [audioUrl, setAudioUrl] = useState<string>('')
   const form = useForm<z.infer<typeof formSchema>>({
@@ -60,7 +62,22 @@ function VoiceGenerator() {
               <div className="border rounded-xl bg-zinc-800 border-zinc-700 p-6">
                 <div className="flex mb-5 flex-row items-center justify-start gap-x-4">
                   <div>
-                    <VoiceModal />
+                    <Button
+                      onClick={() => setIsOpen(true)}
+                      className="border-zinc-600 bg-zinc-700 border"
+                    >
+                      <Volume2 /> Voice
+                      <ChevronDown />
+                    </Button>
+                    <CustomModal
+                      modalSize="md:max-w-[600px]"
+                      title="Select your voice"
+                      desc="Select voice"
+                      isOpen={isOpen}
+                      onClose={() => setIsOpen(false)}
+                    >
+                      <Voicetable />
+                    </CustomModal>
                   </div>
                   <div>
                     <SpeedSelect />
