@@ -3,13 +3,13 @@ import useAudioStore from '@/store/audio'
 import { ColumnDef } from '@tanstack/react-table'
 import { Pause, Play } from 'lucide-react'
 import Image from 'next/image'
+import { FormattedVoice } from '@/types/formattedVoice' // Import FormattedVoice
 
 const PlayPauseButton = ({ voiceName, language }: { voiceName: string; language: string }) => {
   const { playingVoice, setPlayingVoice, audio, setAudio } = useAudioStore()
 
   const togglePlayPause = async () => {
     if (playingVoice === voiceName && audio) {
-      // If the same voice is playing, pause it
       audio.pause()
       setPlayingVoice(null)
       return
@@ -17,7 +17,7 @@ const PlayPauseButton = ({ voiceName, language }: { voiceName: string; language:
 
     try {
       if (audio) {
-        audio.pause() // Pause currently playing audio if any
+        audio.pause()
       }
 
       const response = await fetch('/api/new', {
@@ -40,10 +40,9 @@ const PlayPauseButton = ({ voiceName, language }: { voiceName: string; language:
       setPlayingVoice(voiceName)
       newAudio.play()
 
-      // Stop audio when it ends
       newAudio.onended = () => {
         setPlayingVoice(null)
-        URL.revokeObjectURL(audioUrl) // Clean up URL object
+        URL.revokeObjectURL(audioUrl)
       }
     } catch (error) {
       console.error('Error playing voice sample:', error)
@@ -51,30 +50,20 @@ const PlayPauseButton = ({ voiceName, language }: { voiceName: string; language:
   }
 
   return (
-    <Button onClick={togglePlayPause} size="sm">
+    <Button className="bg-zinc-950 shadow-2xl border border-zinc-800" onClick={togglePlayPause}>
       {playingVoice === voiceName ? <Pause /> : <Play />}
     </Button>
   )
 }
-export type Voices = {
-  name: string
-  gender: string
-  language: string
-  accent: string
-  flag: string
-  languageraw: string
-  paly: () => void
-}
 
-export const columns: ColumnDef<Voices>[] = [
+export const columns: ColumnDef<FormattedVoice>[] = [
   {
+    id: 'play',
     header: 'Action',
-    accessorKey: 'play',
     cell: ({ row }) => {
       return <PlayPauseButton voiceName={row.original.name} language={row.original.languageraw} />
     }
   },
-
   {
     accessorKey: 'name',
     header: 'Name'
@@ -83,18 +72,17 @@ export const columns: ColumnDef<Voices>[] = [
     accessorKey: 'gender',
     header: 'Gender'
   },
-
   {
-    accessorKey: 'flag',
+    id: 'flag',
     header: 'Flag',
     cell: ({ row }) =>
       row.original.accent !== 'XA' ? (
         <Image
-          className="w-[30px] h-[30px] rounded-full"
           src={row.original.flag}
-          alt={row.original.accent}
+          alt={`${row.original.language} Flag`}
           width={30}
-          height={30}
+          height={20}
+          className="rounded-full"
         />
       ) : (
         <></>
