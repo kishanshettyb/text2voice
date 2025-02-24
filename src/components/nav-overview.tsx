@@ -9,7 +9,7 @@ import {
   SidebarMenuItem
 } from '@/components/ui/sidebar'
 
-export function NavMain({
+export function NavOverview({
   items
 }: {
   items: {
@@ -20,7 +20,7 @@ export function NavMain({
 }) {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Voice Features</SidebarGroupLabel>
+      <SidebarGroupLabel>Overview</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <SidebarMenuItem key={item.name}>
