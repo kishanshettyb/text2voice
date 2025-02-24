@@ -59,20 +59,16 @@ function VoiceGenerator() {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="flex flex-col md:flex-row gap-x-6 gap-y-6 lg:gap-y-0 p-6">
             <div className="w-full md:w-3/4">
-              <div className="border rounded-xl bg-zinc-800 border-zinc-700 p-6">
+              <div className="border rounded-xl  border-zinc-200 p-6">
                 <div className="flex mb-5 flex-row items-center justify-start gap-x-4">
                   <div>
-                    <Button
-                      onClick={() => setIsOpen(true)}
-                      className="border-zinc-600 bg-zinc-700 border"
-                    >
+                    <Button onClick={() => setIsOpen(true)} variant="outline">
                       <Volume2 /> Voice
                       <ChevronDown />
                     </Button>
                     <CustomModal
                       modalSize="md:max-w-[600px]"
                       title="Select your voice"
-                      desc="Select voice"
                       isOpen={isOpen}
                       onClose={() => setIsOpen(false)}
                     >
@@ -90,7 +86,7 @@ function VoiceGenerator() {
                     <FormItem>
                       <FormControl>
                         <Textarea
-                          className="border-zinc-600 rounded-lg active:border-zinc-500 focus:border-zinc-500 text-white"
+                          className="dark:border-zinc-600 rounded-lg dark:active:border-zinc-500 dark:focus:border-zinc-500 dark:text-white"
                           placeholder="Type here..."
                           {...field}
                         />
@@ -102,9 +98,9 @@ function VoiceGenerator() {
               </div>
             </div>
             <div className="w-full md:w-1/4">
-              <div className="border rounded-xl bg-zinc-800 border-zinc-700  p-5">
+              <div className="border rounded-xl dark:bg-zinc-800 dark:border-zinc-700  p-5">
                 {audioUrl != '' ? (
-                  <div className="border rounded-2xl text-white flex justify-center items-center border-zinc-700 p-4">
+                  <div className="border rounded-2xl dark:text-white flex justify-center items-center dark:border-zinc-700 p-4">
                     Download here
                   </div>
                 ) : (
@@ -114,7 +110,7 @@ function VoiceGenerator() {
                   disabled={!form.formState.isValid}
                   type="submit"
                   size="lg"
-                  className="bg-blue-600 hover:bg-blue-500 mt-4 text-lg shadow-2xl py-6 shadow-blue-900 w-full"
+                  className="bg-blue-600 hover:bg-blue-500 mt-4 text-lg shadow-2xl py-6 shadow-blue-200 w-full"
                 >
                   <Zap size={30} />
                   Generate

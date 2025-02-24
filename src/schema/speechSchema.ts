@@ -6,5 +6,5 @@ export const speechSchema = z.object({
     .min(1, {
       message: 'Please add some words and try again...'
     })
-    .max(50)
+    .max(500)
 })

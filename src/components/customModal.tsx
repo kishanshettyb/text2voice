@@ -12,7 +12,7 @@ interface CustomModalProps {
   onClose: () => void
   modalSize?: string
   title: string
-  desc: string
+  desc?: string
   children?: React.ReactNode // children prop
 }
 const CustomModal: React.FC<CustomModalProps> = ({

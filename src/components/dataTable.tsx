@@ -1,4 +1,3 @@
-'use client'
 import * as React from 'react'
 import {
   ColumnDef,
@@ -20,6 +19,7 @@ import {
   TableRow
 } from '@/components/ui/table'
 import { Input } from './ui/input'
+import { Button } from './ui/button'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -96,7 +96,12 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           </TableBody>
         </Table>
       </div>
-      <div className="border border-zinc-700 rounded-xl p-4 w-full h-[50px]"></div>
+      <div className="border flex flex-row justify-between border-zinc-700 rounded-xl p-4 w-full h-[50px]">
+        <div>
+          <p>Selected Voice</p>
+          <Button> Voice</Button>
+        </div>
+      </div>
     </div>
   )
 }
