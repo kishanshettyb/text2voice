@@ -28,8 +28,8 @@ export const columns: ColumnDef<FormattedVoice>[] = [
           src={row.original.flag}
           alt={`${row.original.language} Flag`}
           width={30}
-          height={20}
-          className="rounded-full"
+          height={30}
+          className="rounded-full h-[30px] w-[30px] object-cover"
         />
       ) : (
         <></>

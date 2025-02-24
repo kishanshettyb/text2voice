@@ -1,4 +1,3 @@
-import StudioFooter from '@/components/studioFooter'
 import StudioHeader from '@/components/studioHeader'
 import StudioSidebar from '@/components/studioSidebar'
 import React, { ReactNode } from 'react'
@@ -9,7 +8,7 @@ interface Props {
 
 function Layout({ children }: Props) {
   return (
-    <div className="flex bg-zinc-900 h-screen">
+    <div className="flex bg-white dark:bg-zinc-900 h-screen">
       <div className="hidden lg:w-1/6 bg-zinc-800 lg:flex h-100">
         <StudioSidebar />
       </div>
@@ -17,7 +16,6 @@ function Layout({ children }: Props) {
         <div>
           <StudioHeader />
           {children}
-          <StudioFooter />
         </div>
       </div>
     </div>
