@@ -17,11 +17,11 @@ export function SpeedSelect() {
   return (
     <div className="relative">
       <Select value={voiceSpeed} onValueChange={setVoiceSpeed}>
-        <CircleGauge size="16" className="absolute text-white left-[16px] top-[10px]" />
-        <SelectTrigger className="w-[110px] border-zinc-600 text-white bg-zinc-700 border pl-10">
-          <SelectValue className="text-zinc-500" placeholder="Select Speed" />
+        <CircleGauge size="16" className="absolute left-[16px] top-[10px]" />
+        <SelectTrigger className="w-[110px]  pl-10">
+          <SelectValue placeholder="Select Speed" />
         </SelectTrigger>
-        <SelectContent className="bg-zinc-700  border-zinc-600 text-white border">
+        <SelectContent>
           <SelectGroup>
             <SelectLabel>Speed</SelectLabel>
             <SelectItem value="1.5x">1.5x</SelectItem>
