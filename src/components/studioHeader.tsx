@@ -3,10 +3,11 @@ import { ProfileDropdown } from './profileDropdown'
 import { Button } from './ui/button'
 import { Download, Zap } from 'lucide-react'
 import { Input } from '@/components/ui/input'
+import { ModeToggle } from './themeModeToggle'
 
 function StudioHeader() {
   return (
-    <div className="px-6 py-3 border border-x-0 border-zinc-700 border-t-0 w-auto flex-1 flex items-center justify-between">
+    <div className="px-6 py-3 w-auto flex-1 flex items-center justify-between">
       <div className="md:flex hidden gap-x-5 justify-end items-center">
         <div className="md:w-[250px]">
           <Input
@@ -29,6 +30,9 @@ function StudioHeader() {
       <div className="flex flex-row gap-x-5 justify-center">
         <div>
           <ProfileDropdown />
+        </div>
+        <div>
+          <ModeToggle />
         </div>
       </div>
     </div>
