@@ -9,20 +9,20 @@ import {
   SidebarMenuItem
 } from '@/components/ui/sidebar'
 
-export function NavMain({
-  items
+export function NavAccounts({
+  account
 }: {
-  items: {
+  account: {
     name: string
     url: string
     icon: LucideIcon
   }[]
 }) {
   return (
-    <SidebarGroup>
-      <SidebarGroupLabel>Voice Features</SidebarGroupLabel>
+    <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+      <SidebarGroupLabel>Account</SidebarGroupLabel>
       <SidebarMenu>
-        {items.map((item) => (
+        {account.map((item) => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton asChild>
               <a href={item.url}>

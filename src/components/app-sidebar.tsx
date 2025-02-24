@@ -2,20 +2,20 @@
 
 import * as React from 'react'
 import {
+  AudioLines,
   AudioWaveform,
-  BookOpen,
-  Bot,
   Command,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
-  Settings2,
-  SquareTerminal
+  CreditCard,
+  FolderClosed,
+  Headset,
+  LayoutDashboard,
+  Mic,
+  Settings,
+  Sparkles
 } from 'lucide-react'
 
 import { NavMain } from '@/components/nav-main'
-import { NavProjects } from '@/components/nav-projects'
+import { NavAccounts } from '@/components/nav-accounts'
 import { NavUser } from '@/components/nav-user'
 import { TeamSwitcher } from '@/components/team-switcher'
 import {
@@ -25,6 +25,7 @@ import {
   SidebarHeader,
   SidebarRail
 } from '@/components/ui/sidebar'
+import { NavOverview } from './nav-overview'
 
 // This is sample data.
 const data = {
@@ -35,12 +36,12 @@ const data = {
   },
   teams: [
     {
-      name: 'Acme Inc',
-      logo: GalleryVerticalEnd,
+      name: 'voicekaro',
+      logo: Mic,
       plan: 'Enterprise'
     },
     {
-      name: 'Acme Corp.',
+      name: 'voicekaro',
       logo: AudioWaveform,
       plan: 'Startup'
     },
@@ -50,108 +51,45 @@ const data = {
       plan: 'Free'
     }
   ],
-  navMain: [
+  navOverview: [
     {
-      title: 'Playground',
+      name: 'Dashboard',
       url: '#',
-      icon: SquareTerminal,
-      isActive: true,
-      items: [
-        {
-          title: 'History',
-          url: '#'
-        },
-        {
-          title: 'Starred',
-          url: '#'
-        },
-        {
-          title: 'Settings',
-          url: '#'
-        }
-      ]
+      icon: LayoutDashboard
     },
     {
-      title: 'Models',
+      name: 'Files',
       url: '#',
-      icon: Bot,
-      items: [
-        {
-          title: 'Genesis',
-          url: '#'
-        },
-        {
-          title: 'Explorer',
-          url: '#'
-        },
-        {
-          title: 'Quantum',
-          url: '#'
-        }
-      ]
-    },
-    {
-      title: 'Documentation',
-      url: '#',
-      icon: BookOpen,
-      items: [
-        {
-          title: 'Introduction',
-          url: '#'
-        },
-        {
-          title: 'Get Started',
-          url: '#'
-        },
-        {
-          title: 'Tutorials',
-          url: '#'
-        },
-        {
-          title: 'Changelog',
-          url: '#'
-        }
-      ]
-    },
-    {
-      title: 'Settings',
-      url: '#',
-      icon: Settings2,
-      items: [
-        {
-          title: 'General',
-          url: '#'
-        },
-        {
-          title: 'Team',
-          url: '#'
-        },
-        {
-          title: 'Billing',
-          url: '#'
-        },
-        {
-          title: 'Limits',
-          url: '#'
-        }
-      ]
+      icon: FolderClosed
     }
   ],
-  projects: [
+  navMain: [
     {
-      name: 'Design Engineering',
+      name: 'Text to Speech',
       url: '#',
-      icon: Frame
+      icon: AudioLines
     },
     {
-      name: 'Sales & Marketing',
+      name: 'Voice Cloning',
       url: '#',
-      icon: PieChart
+      icon: Sparkles
+    }
+  ],
+  account: [
+    {
+      name: 'Billing',
+      url: '#',
+      icon: CreditCard
     },
     {
-      name: 'Travel',
+      name: 'Settings',
       url: '#',
-      icon: Map
+      icon: Settings
+    },
+    {
+      name: 'Support',
+      url: '#',
+      icon: Headset
     }
   ]
 }
@@ -163,8 +101,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
+        <NavOverview items={data.navOverview} />
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        <NavAccounts account={data.account} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
