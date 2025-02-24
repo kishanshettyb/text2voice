@@ -21,7 +21,7 @@ function Layout({ children }: Props) {
     <div className="flex bg-white dark:bg-zinc-900 h-screen">
       <SidebarProvider>
         <AppSidebar />
-        <main className="w-full">
+        <div className="w-full">
           <SidebarInset>
             <header className="border mb-5 flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
               <div className="flex justify-between w-full  flex-row">
@@ -46,17 +46,9 @@ function Layout({ children }: Props) {
                 </div>
               </div>
             </header>
-            <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-              <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                <div className="aspect-video rounded-xl bg-muted/50" />
-                <div className="aspect-video rounded-xl bg-muted/50" />
-                <div className="aspect-video rounded-xl bg-muted/50" />
-              </div>
-              <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
-            </div>
+            {children}
           </SidebarInset>
-          {children}
-        </main>
+        </div>
       </SidebarProvider>
     </div>
   )
