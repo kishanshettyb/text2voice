@@ -73,7 +73,7 @@ function VoiceGenerator() {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="flex flex-col md:flex-row gap-x-6 gap-y-6 lg:gap-y-0 p-6">
             <div className="w-full md:w-3/4">
-              <div className="border rounded-xl  border-zinc-200 p-6">
+              <div className="border rounded-xl  border-zinc-200 dark:border-zinc-600 dark:bg-zinc-900 p-6">
                 <div className="flex mb-5 flex-row items-center justify-start gap-x-4">
                   <div>
                     <Button onClick={() => setIsOpen(true)} variant="outline">
@@ -112,7 +112,7 @@ function VoiceGenerator() {
               </div>
             </div>
             <div className="w-full md:w-1/4">
-              <div className="border rounded-xl dark:bg-zinc-800 dark:border-zinc-700  p-5">
+              <div className="border rounded-xl dark:bg-zinc-900 dark:border-zinc-700  p-5">
                 {audioUrl && (
                   <div className="border rounded-2xl dark:text-white flex justify-center items-center dark:border-zinc-700 p-4">
                     <a href={audioUrl} download="speech.mp3">
