@@ -53,7 +53,6 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           className="max-w-sm border-zinc-800"
         />
       </div>
-
       <div className="rounded-md overflow-y-scroll overflow-x-hidden h-[350px] mb-5 text-white border-zinc-800 bg-zinc-950 border">
         <Table className="border-zinc-800">
           <TableHeader className="border-zinc-900">
@@ -96,10 +95,10 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           </TableBody>
         </Table>
       </div>
-      <div className="border flex flex-row justify-between border-zinc-700 rounded-xl p-4 w-full h-[50px]">
+      <div className="border flex flex-row justify-between border-zinc-700 rounded-xl p-4 w-full mb-5">
         <div>
-          <p>Selected Voice</p>
-          <Button> Voice</Button>
+          <p className="text-sm mb-2">Selected Voice</p>
+          <Button size="sm">Voice</Button>
         </div>
       </div>
     </div>
