@@ -3,7 +3,7 @@ import React from 'react'
 
 function Page() {
   return (
-    <div>
+    <div className="flex-1 ">
       <VoiceGenerator />
     </div>
   )
