@@ -1,7 +1,8 @@
 'use client'
+
 import { Textarea } from '@/components/ui/textarea'
 import React, { useState } from 'react'
-import { ChevronDown, Volume2, Zap } from 'lucide-react'
+import { ChevronDown, Loader2, Volume2, Zap } from 'lucide-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -12,17 +13,35 @@ import { SpeedSelect } from '@/components/speedSelect'
 import useVoiceStore from '@/store/speed'
 import Voicetable from '@/components/voiceTable'
 import CustomModal from '@/components/customModal'
+import { useMutation } from '@tanstack/react-query'
 
+// Form schema using Zod for validation
 const formSchema = speechSchema
 interface RequestData {
   text: string
   speed: string
 }
 
+// Function to call the API and generate the speech
+const generateSpeech = async (requestData: RequestData) => {
+  const response = await fetch('../api/tts', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(requestData)
+  })
+
+  const data = await response.json()
+  if (!response.ok || !data.audioUrl) {
+    throw new Error('Failed to generate speech')
+  }
+  return data.audioUrl
+}
+
 function VoiceGenerator() {
   const [isOpen, setIsOpen] = useState(false)
   const voiceSpeed = useVoiceStore((state) => state.voiceSpeed) || '1.0x'
   const [audioUrl, setAudioUrl] = useState<string>('')
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -31,26 +50,21 @@ function VoiceGenerator() {
     mode: 'onChange'
   })
 
+  // Use TanStack Query's useMutation for generating speech
+  const { mutateAsync, isPending, isError, error } = useMutation({
+    mutationFn: generateSpeech,
+    onSuccess: (audioUrl) => {
+      setAudioUrl(audioUrl)
+    }
+  })
+
+  // Handle form submission and trigger speech generation
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(JSON.stringify(values) + voiceSpeed)
     const requestData = {
       ...values,
       speed: voiceSpeed
     }
-    handleGenerateSpeech(requestData)
-  }
-
-  const handleGenerateSpeech = async (requestData: RequestData) => {
-    const response = await fetch('../api/tts', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(requestData)
-    })
-
-    const data = await response.json()
-    if (data.audioUrl) {
-      setAudioUrl(data.audioUrl)
-    }
+    mutateAsync(requestData)
   }
 
   return (
@@ -99,22 +113,32 @@ function VoiceGenerator() {
             </div>
             <div className="w-full md:w-1/4">
               <div className="border rounded-xl dark:bg-zinc-800 dark:border-zinc-700  p-5">
-                {audioUrl != '' ? (
+                {audioUrl && (
                   <div className="border rounded-2xl dark:text-white flex justify-center items-center dark:border-zinc-700 p-4">
-                    Download here
+                    <a href={audioUrl} download="speech.mp3">
+                      Download here
+                    </a>
                   </div>
-                ) : (
-                  <></>
                 )}
                 <Button
-                  disabled={!form.formState.isValid}
+                  disabled={!form.formState.isValid || isPending}
                   type="submit"
                   size="lg"
-                  className="bg-blue-600 hover:bg-blue-500 mt-4 text-lg shadow-2xl py-6 shadow-blue-200 w-full"
+                  className="bg-green-500 text-white hover:bg-green-600 mt-4 text-lg   py-6   w-full"
                 >
-                  <Zap size={30} />
-                  Generate
+                  {isPending ? (
+                    <>
+                      <Loader2 className="animate-spin" size={30} />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Zap size={30} />
+                      Generate
+                    </>
+                  )}
                 </Button>
+                {isError && <p className="text-sm text-red-500 mt-5">{(error as Error).message}</p>}
                 <p className="text-sm mt-5 text-zinc-500">
                   There are no audio samples in this paragraph yet. Click the button above to
                   generate the first one.
