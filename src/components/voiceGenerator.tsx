@@ -2,7 +2,7 @@
 
 import { Textarea } from '@/components/ui/textarea'
 import React, { useState } from 'react'
-import { ChevronDown, Loader2, Volume2, Zap } from 'lucide-react'
+import { ChevronDown, Download, Loader2, PlayCircle, Volume2, Zap } from 'lucide-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -14,6 +14,8 @@ import useVoiceStore from '@/store/speed'
 import Voicetable from '@/components/voiceTable'
 import CustomModal from '@/components/customModal'
 import { useMutation } from '@tanstack/react-query'
+// import { Progress } from '@/components/ui/progress'
+import { PlayProgress } from './playProgress'
 
 // Form schema using Zod for validation
 const formSchema = speechSchema
@@ -113,13 +115,6 @@ function VoiceGenerator() {
             </div>
             <div className="w-full md:w-1/4">
               <div className="border rounded-xl dark:bg-zinc-900 dark:border-zinc-700  p-5">
-                {audioUrl && (
-                  <div className="border rounded-2xl dark:text-white flex justify-center items-center dark:border-zinc-700 p-4">
-                    <a href={audioUrl} download="speech.mp3">
-                      Download here
-                    </a>
-                  </div>
-                )}
                 <Button
                   disabled={!form.formState.isValid || isPending}
                   type="submit"
@@ -129,12 +124,12 @@ function VoiceGenerator() {
                   {isPending ? (
                     <>
                       <Loader2 className="animate-spin" size={30} />
-                      Generating...
+                      {audioUrl ? `Regenerating...` : `Generating...`}
                     </>
                   ) : (
                     <>
                       <Zap size={30} />
-                      Generate
+                      {audioUrl ? `Regenerate` : `Generate`}
                     </>
                   )}
                 </Button>
@@ -143,6 +138,22 @@ function VoiceGenerator() {
                   There are no audio samples in this paragraph yet. Click the button above to
                   generate the first one.
                 </p>
+                {/* {audioUrl && ( */}
+                <>
+                  <div className="border w-full border-x-0 border-zinc-200 dark:border-zinc-600 my-5 border-b-0"></div>
+                  <div className="flex ">
+                    <div className="cursor-pointer">
+                      <PlayCircle />
+                    </div>
+                    <div>
+                      <PlayProgress />
+                    </div>
+                    <div className="cursor-pointer">
+                      <Download />
+                    </div>
+                  </div>
+                </>
+                {/* )} */}
               </div>
             </div>
           </div>
