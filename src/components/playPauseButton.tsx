@@ -47,7 +47,7 @@ const PlayPauseButton = ({ voiceName, language }: { voiceName: string; language:
   }
 
   return (
-    <Button className="bg-zinc-950 shadow-2xl border border-zinc-800" onClick={togglePlayPause}>
+    <Button variant="ghost" className="shadow-2xl border " onClick={togglePlayPause}>
       {playingVoice === voiceName ? <Pause /> : <Play />}
     </Button>
   )

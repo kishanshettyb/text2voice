@@ -53,9 +53,9 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           className="max-w-sm border-zinc-800"
         />
       </div>
-      <div className="rounded-md overflow-y-scroll overflow-x-hidden h-[350px] mb-5 text-white border-zinc-800 bg-zinc-950 border">
-        <Table className="border-zinc-800">
-          <TableHeader className="border-zinc-900">
+      <div className="rounded-md overflow-y-scroll overflow-x-hidden h-[350px] mb-5 dark:text-white dark:border-zinc-800 dark:bg-zinc-950 border">
+        <Table>
+          <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
@@ -73,11 +73,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  className="border-zinc-900"
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                >
+                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}

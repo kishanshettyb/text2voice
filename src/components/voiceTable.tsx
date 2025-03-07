@@ -52,12 +52,12 @@ function Voicetable() {
   }, [newData.data, languageMap])
 
   if (newData.isLoading) {
-    return <div className="text-white flex justify-center items-center">Loading...</div>
+    return <div className="dark:text-white flex justify-center items-center">Loading...</div>
   }
 
   if (newData.isError) {
     return (
-      <div className="text-white flex justify-center items-center">
+      <div className="dark:text-white flex justify-center items-center">
         Error: {newData.error?.message}
       </div>
     )
