@@ -95,11 +95,12 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background-color: transparent;
+  background-color: #dddddd25;
+
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #dddddd82;
+  background-color: #dddddd90;
   border-radius: 10px;
 }
 
