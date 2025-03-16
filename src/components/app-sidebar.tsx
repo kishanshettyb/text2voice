@@ -54,19 +54,19 @@ const data = {
   navOverview: [
     {
       name: 'Dashboard',
-      url: '#',
+      url: '/studio',
       icon: LayoutDashboard
     },
     {
-      name: 'Files',
-      url: '#',
+      name: 'My Files',
+      url: '/studio/my-files',
       icon: FolderClosed
     }
   ],
   navMain: [
     {
       name: 'Text to Speech',
-      url: '#',
+      url: '/studio/text-to-speech',
       icon: AudioLines
     },
     {
