@@ -65,7 +65,7 @@ export function LoginForm() {
   }
 
   return (
-    <>
+    <div className="m-auto ">
       <Card className="w-[350px] shadow-2xl shadow-blue-300">
         <CardHeader>
           <CardTitle className="text-xl text-center">Logo</CardTitle>
@@ -74,7 +74,7 @@ export function LoginForm() {
           <div className="grid w-full items-center gap-4">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)}>
-                <div className="space-y-4">
+                <div className="space-y-4 relative">
                   <FormField
                     control={form.control}
                     name="identifier"
@@ -93,7 +93,12 @@ export function LoginForm() {
                     name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Password</FormLabel>
+                        <div className="flex justify-between items-center">
+                          <FormLabel>Password</FormLabel>
+                          <p className="opacity-50 hover:opacity-100  text-sm ">
+                            <Link href="#">Forgot Password?</Link>
+                          </p>
+                        </div>
                         <FormControl>
                           <div className="relative">
                             <Input
@@ -164,7 +169,7 @@ export function LoginForm() {
             Login with Google
           </Button>
           <div>
-            <p className="mt-5 text-sm text-center">
+            <p className="mt-5 text-zinc-600 text-sm text-center">
               Don&apos;t have an Account?{' '}
               <Link className="text-blue-500 font-semibold" href="#">
                 Signup Now
@@ -173,6 +178,6 @@ export function LoginForm() {
           </div>
         </CardContent>
       </Card>
-    </>
+    </div>
   )
 }
