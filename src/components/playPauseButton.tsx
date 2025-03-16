@@ -21,7 +21,7 @@ const PlayPauseButton = ({ voiceName, language }: { voiceName: string; language:
       }
 
       // Fetch new audio
-      const response = await fetch('/api/new', {
+      const response = await fetch('../api/new', {
         method: 'POST',
         body: JSON.stringify({
           text: 'Hello, this is a sample voice test.',
