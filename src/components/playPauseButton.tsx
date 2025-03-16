@@ -7,16 +7,20 @@ const PlayPauseButton = ({ voiceName, language }: { voiceName: string; language:
 
   const togglePlayPause = async () => {
     if (playingVoice === voiceName && audio) {
+      // Pause the currently playing audio
       audio.pause()
       setPlayingVoice(null)
       return
     }
 
     try {
+      // Stop currently playing audio if any
       if (audio) {
         audio.pause()
+        setPlayingVoice(null)
       }
 
+      // Fetch new audio
       const response = await fetch('/api/new', {
         method: 'POST',
         body: JSON.stringify({
@@ -33,10 +37,12 @@ const PlayPauseButton = ({ voiceName, language }: { voiceName: string; language:
       const audioUrl = URL.createObjectURL(audioBlob)
       const newAudio = new Audio(audioUrl)
 
+      // Set new audio and play
       setAudio(newAudio)
       setPlayingVoice(voiceName)
       newAudio.play()
 
+      // When audio ends, reset state
       newAudio.onended = () => {
         setPlayingVoice(null)
         URL.revokeObjectURL(audioUrl)
@@ -47,9 +53,10 @@ const PlayPauseButton = ({ voiceName, language }: { voiceName: string; language:
   }
 
   return (
-    <Button variant="ghost" className="shadow-2xl border " onClick={togglePlayPause}>
+    <Button variant="ghost" className="shadow-2xl border" onClick={togglePlayPause}>
       {playingVoice === voiceName ? <Pause /> : <Play />}
     </Button>
   )
 }
+
 export default PlayPauseButton
