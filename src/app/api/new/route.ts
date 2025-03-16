@@ -5,7 +5,7 @@ export async function POST(req: Request) {
     const { text, voice, language } = await req.json()
 
     const response = await fetch(
-      `https://texttospeech.googleapis.com/v1/text:synthesize?key=AIzaSyC_jP66URZIuQqnMoAOY8k4nhbJJVrLWD0`,
+      `https://texttospeech.googleapis.com/v1/text:synthesize?key=${process.env.GOOGLE_TEXT_TO_SPEECH_API}`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
