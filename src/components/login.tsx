@@ -119,7 +119,7 @@ export function LoginForm() {
                     )}
                   />
                 </div>
-                <div className="my-5">
+                <div className="mt-5">
                   <p className="text-xs text-center text-red-600">
                     {isLoading ? (
                       ''
@@ -132,7 +132,7 @@ export function LoginForm() {
                     )}
                   </p>
                 </div>
-                <div className="mt-8">
+                <div className={error ? `mt-5` : `mt-8`}>
                   <Button disabled={isLoading} className="w-full" size="lg" type="submit">
                     {isLoading ? (
                       <>
