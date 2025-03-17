@@ -23,17 +23,27 @@ import { DataTablePagination } from './dataTablePagination'
 import { DataTableColumnViewOptions } from './dataTableColumToggle'
 import * as React from 'react'
 import { Input } from './ui/input'
+import ExportData from './exportDate'
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  exportData?: boolean
+  exportDataName?: string
 }
 
-export function MyFilesDataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function MyFilesDataTable<TData, TValue>({
+  columns,
+  data,
+  exportData,
+  exportDataName
+}: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const table = useReactTable({
     data,
     columns,
+    exportData,
+    exportDataName,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
@@ -57,8 +67,9 @@ export function MyFilesDataTable<TData, TValue>({ columns, data }: DataTableProp
             className="max-w-sm"
           />
         </div>
-        <div>
+        <div className="flex flex-row items-center justify-between gap-x-2">
           <DataTableColumnViewOptions table={table} />
+          <div>{exportData && <ExportData data={data} fileName={exportDataName} />}</div>
         </div>
       </div>
       <div className="rounded-md border">

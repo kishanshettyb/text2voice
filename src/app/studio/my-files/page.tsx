@@ -221,7 +221,12 @@ export default async function MyFilesPage() {
 
   return (
     <div className="container mx-auto p-4 border rounded-2xl">
-      <MyFilesDataTable columns={columns} data={data.data} />
+      <MyFilesDataTable
+        columns={columns}
+        data={data.data}
+        exportData={true}
+        exportDataName="MyFiles"
+      />
     </div>
   )
 }
