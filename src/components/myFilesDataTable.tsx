@@ -48,7 +48,7 @@ export function MyFilesDataTable<TData, TValue>({ columns, data }: DataTableProp
 
   return (
     <>
-      <div className="mb-5 flex flex-row justify-between items-center">
+      <div className="mb-2 flex flex-row justify-between items-center">
         <div className="flex items-center py-4">
           <Input
             placeholder="Search Text"
