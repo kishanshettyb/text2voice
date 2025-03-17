@@ -46,7 +46,7 @@ function Layout({ children }: Props) {
                 </div>
               </div>
             </header>
-            {children}
+            <div className="p-4">{children}</div>
           </SidebarInset>
         </div>
       </SidebarProvider>
