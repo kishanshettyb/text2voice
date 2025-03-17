@@ -6,7 +6,6 @@ import { useGetAllUserTextToVoiceData } from '@/services/queries/voices'
 export default function MyFilesPage() {
   const userId = 'nsf2kn65hohydco68sn0i1x1'
   const userTextToVoiceData = useGetAllUserTextToVoiceData(userId)
-  console.log(JSON.stringify(userTextToVoiceData?.data?.data))
   return (
     <div className="container mx-auto p-4 border rounded-2xl">
       <MyFilesDataTable
