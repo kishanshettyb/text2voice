@@ -1,0 +1,66 @@
+'use client'
+
+import { Button } from '@/components/ui/button'
+import { ColumnDef } from '@tanstack/react-table'
+import { Download } from 'lucide-react'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import moment from 'moment'
+
+import { DataTableColumnHeader } from '@/components/DataTableColumnHeader'
+
+// This type is used to define the shape of our data.
+// You can use a Zod schema here if you want.
+export type Payment = {
+  id: string
+  character_count: string
+  voice_name: string
+  voice_speed: string
+}
+
+export const columns: ColumnDef<Payment>[] = [
+  {
+    accessorKey: 'id',
+    header: 'ID'
+  },
+  {
+    accessorKey: 'createdAt',
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Created Date" />,
+    cell: ({ row }) => <p>{moment(row.getValue('createdAt')).format('DD MMM YYYY HH:mm a')}</p>,
+    enableSorting: true
+  },
+
+  {
+    accessorKey: 'character_count',
+    header: 'Character Count'
+  },
+  {
+    accessorKey: 'voice_speed',
+    header: 'Voice Speed'
+  },
+  {
+    accessorKey: 'text',
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Text" />,
+    enableSorting: true,
+    cell: ({ row }) => (
+      <Popover>
+        <PopoverTrigger>
+          <div className="w-[200px] p-2 border text-left border-slate-100 bg-slate-50 ">
+            <p className="line-clamp-1">{row.getValue('text')}</p>
+          </div>
+        </PopoverTrigger>
+        <PopoverContent>{row.getValue('text')}</PopoverContent>
+      </Popover>
+    )
+  },
+  {
+    accessorKey: 'audio_url',
+    header: 'Download',
+    cell: ({ row }) => (
+      <Button asChild variant="outline">
+        <a href={row.getValue('audio_url')} download={row.getValue('audio_url')}>
+          <Download />
+        </a>
+      </Button>
+    )
+  }
+]
