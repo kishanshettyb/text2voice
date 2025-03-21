@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { LogOut } from 'lucide-react'
+import LogoutButton from './logoutButton'
 type Checked = DropdownMenuCheckboxItemProps['checked']
 
 export function ProfileDropdown() {
@@ -30,6 +31,7 @@ export function ProfileDropdown() {
         <DropdownMenuCheckboxItem checked={showPanel} onCheckedChange={setShowPanel}>
           <LogOut size="20" className="mr-2" /> Signout
         </DropdownMenuCheckboxItem>
+        <LogoutButton />
       </DropdownMenuContent>
     </DropdownMenu>
   )
