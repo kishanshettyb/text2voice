@@ -19,12 +19,16 @@ export function useGetAllLanguages() {
   })
 }
 
-export function useGetAllUserTextToVoiceData(userId: string) {
+export function useGetAllUserTextToVoiceData(userId: string, page: number) {
   return useQuery({
-    queryKey: ['userTestToVoice'],
-    queryFn: () => getAllUserTextToVoiceData(userId),
+    queryKey: ['userTextToVoice', userId, page], // Include userId for proper caching
+    queryFn: async () => {
+      if (!userId) return [] // Ensure we don't fetch if userId is missing
+      const data = await getAllUserTextToVoiceData(userId, page)
+      return Array.isArray(data) ? data : [] // Ensure it always returns an array
+    },
     staleTime: 5 * 60 * 1000,
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true,
     enabled: !!userId
   })
 }

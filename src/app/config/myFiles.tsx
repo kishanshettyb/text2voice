@@ -40,6 +40,12 @@ export const columns: ColumnDef<Payment>[] = [
     enableHiding: false
   },
   {
+    accessorKey: 'id',
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Created Date" />,
+    cell: ({ row }) => <p>{row.getValue('id')}</p>,
+    enableSorting: false
+  },
+  {
     accessorKey: 'createdAt',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Created Date" />,
     cell: ({ row }) => <p>{moment(row.getValue('createdAt')).format('DD MMM YYYY HH:mm a')}</p>,
