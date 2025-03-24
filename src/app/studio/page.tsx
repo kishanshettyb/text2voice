@@ -1,25 +1,14 @@
 'use client'
-import React from 'react'
 
-import { useAuth } from '@/context/AuthContext'
-function Page() {
-  const { user, loading, logout } = useAuth()
+import { useAuth } from '@/context/AuthProvider'
 
-  if (loading) return <p>Loading...</p>
-  if (!user)
-    return (
-      <p>
-        Unauthorized. Please log in. <button onClick={logout}>Logout</button>
-      </p>
-    )
+export default function Dashboard() {
+  const { user } = useAuth()
 
   return (
-    <div className="flex-1 ">
-      <p>Show Dashbord</p>
-      <h1>Welcome, {user.username}!</h1>
-      <button onClick={logout}>Logout</button>
+    <div>
+      <h1>Welcome {user ? user.email : 'Guest'}</h1>
+      <h1>Welcome {user ? user.documentId : 'Guest'}</h1>
     </div>
   )
 }
-
-export default Page
