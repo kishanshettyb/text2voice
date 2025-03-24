@@ -36,8 +36,19 @@ const Mp3Player = ({ src, title }: { src: string; title: string }) => {
 
   return (
     <div>
-      <h3 className="text-xs font-semibold line-clamp-1  pb-2">{title}</h3>
-      <div className="w-full max-w-sm p-2 border rounded-2xl  bg-white">
+      <div className="flex flex-1 pb-2 justify-between items-center">
+        <div className="w-1/2 ">
+          <p className="text-xs font-semibold line-clamp-1">
+            {title} Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta dolorem earum
+            esse qui aliquam labore cupiditate assumenda, tenetur temporibus, sequi est
+            reprehenderit voluptatibus fuga, veniam inventore. Doloremque suscipit deserunt a?
+          </p>
+        </div>
+        <div>
+          <p className="text-xs line-clamp-1">10:30 am</p>
+        </div>
+      </div>
+      <div className="w-full max-w-sm p-2 border rounded-2xl  bg-white dark:bg-zinc-950 dark:border-zinc-800">
         <div className="flex items-center justify-between gap-x-3">
           <div>
             <Button
