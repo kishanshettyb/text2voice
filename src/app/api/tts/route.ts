@@ -12,10 +12,11 @@ const client = new textToSpeech.TextToSpeechClient()
 
 export async function POST(req: Request) {
   try {
-    const { text, voice = 'en-US-Wavenet-D', audioFormat = 'MP3', speed } = await req.json()
+    const { text, voice = 'en-US-Wavenet-D', audioFormat = 'MP3', speed, userId } = await req.json()
     const value = speed
     const voiceSpeed = parseFloat(value)
     const characterCount = text.length
+    const user = userId
 
     if (!text) {
       return NextResponse.json({ error: 'Text is required' }, { status: 400 })
@@ -36,7 +37,6 @@ export async function POST(req: Request) {
     const [response] = await client.synthesizeSpeech(request)
 
     if (!response.audioContent) {
-      console.log('error')
       return NextResponse.json({ error: 'Failed to generate speech' }, { status: 500 })
     }
     const audioBuffer = Buffer.from(response.audioContent, 'binary')
@@ -56,8 +56,6 @@ export async function POST(req: Request) {
     const audioUrl = cloudinaryResponse.secure_url
     console.log(audioUrl)
 
-    const userId = 'pufpt61m03feyks5ck8adn31'
-
     // Save TTS record in Strapi
     const strapiRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/text-to-voice-generations`, {
       method: 'POST',
@@ -67,7 +65,7 @@ export async function POST(req: Request) {
       },
       body: JSON.stringify({
         data: {
-          user: userId,
+          user: user,
           text,
           character_count: characterCount,
           voice_name: voice,
