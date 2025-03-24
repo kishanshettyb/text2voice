@@ -1,19 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 export function middleware(req: NextRequest) {
-  const token = req.cookies.get('token')?.value // Read JWT from cookie
-  console.log(token)
-  const protectedRoutes = ['/studio'] // Add protected pages
-  const isProtected = protectedRoutes.some((route) => req.nextUrl.pathname.startsWith(route))
+  const token = req.cookies.get('token')?.value
+  const isAuthRoute = req.nextUrl.pathname.startsWith('/studio')
 
-  if (isProtected && !token) {
-    return NextResponse.redirect(new URL('/auth', req.url)) // Redirect unauthorized users
+  if (!token && isAuthRoute) {
+    return NextResponse.redirect(new URL('/auth', req.url))
   }
 
-  return NextResponse.next() // Allow access if authenticated
+  return NextResponse.next()
 }
 
-// Apply middleware to specific routes
 export const config = {
-  matcher: ['/studio/:path*', '/profile/:path*'] // Protect multiple routes
+  matcher: ['/studio/:path*'] // Protect all studio routes
 }
