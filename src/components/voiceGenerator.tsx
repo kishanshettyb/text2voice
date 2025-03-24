@@ -14,14 +14,15 @@ import useVoiceStore from '@/store/speed'
 import Voicetable from '@/components/voiceTable'
 import CustomModal from '@/components/customModal'
 import { useMutation } from '@tanstack/react-query'
-// import { Progress } from '@/components/ui/progress'
 import { PlayProgress } from './playProgress'
+import { useAuth } from '@/context/AuthProvider'
 
 // Form schema using Zod for validation
 const formSchema = speechSchema
 interface RequestData {
   text: string
   speed: string
+  userId: string
 }
 
 // Function to call the API and generate the speech
@@ -40,6 +41,7 @@ const generateSpeech = async (requestData: RequestData) => {
 }
 
 function VoiceGenerator() {
+  const { user } = useAuth()
   const [isOpen, setIsOpen] = useState(false)
   const voiceSpeed = useVoiceStore((state) => state.voiceSpeed) || '1.0x'
   const [audioUrl, setAudioUrl] = useState<string>('')
@@ -64,7 +66,8 @@ function VoiceGenerator() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     const requestData = {
       ...values,
-      speed: voiceSpeed
+      speed: voiceSpeed,
+      userId: user.documentId
     }
     mutateAsync(requestData)
   }

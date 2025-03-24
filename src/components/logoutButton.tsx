@@ -5,6 +5,7 @@ import { useLogoutMutation } from '@/services/mutation/login'
 
 function LogoutButton() {
   const logoutMutation = useLogoutMutation()
+  localStorage.removeItem('user')
 
   function handleLogout() {
     logoutMutation.mutate()
