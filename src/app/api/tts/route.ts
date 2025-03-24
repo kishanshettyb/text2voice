@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import textToSpeech from '@google-cloud/text-to-speech'
 import cloudinary from 'cloudinary'
+import { cookies } from 'next/headers'
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -12,6 +13,13 @@ const client = new textToSpeech.TextToSpeechClient()
 
 export async function POST(req: Request) {
   try {
+    const cookieStore = cookies()
+    const token = cookieStore.get('token')?.value
+
+    if (!token) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const { text, voice = 'en-US-Wavenet-D', audioFormat = 'MP3', speed, userId } = await req.json()
     const value = speed
     const voiceSpeed = parseFloat(value)
@@ -40,6 +48,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Failed to generate speech' }, { status: 500 })
     }
     const audioBuffer = Buffer.from(response.audioContent, 'binary')
+
     // Save file temporarily (or upload to storage)
     // const filePath = path.join("./tmp", `speech-${Date.now()}.mp3`);
     // fs.writeFileSync(filePath, response.audioContent, "binary");
@@ -54,14 +63,13 @@ export async function POST(req: Request) {
         .end(audioBuffer)
     })
     const audioUrl = cloudinaryResponse.secure_url
-    console.log(audioUrl)
 
     // Save TTS record in Strapi
-    const strapiRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/text-to-voice-generations`, {
+    const strapiRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/voices`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_ADMIN_TOKEN}`
+        Authorization: `Bearer ${token}`
       },
       body: JSON.stringify({
         data: {
