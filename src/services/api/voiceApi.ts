@@ -1,3 +1,4 @@
+import { StoreVoices } from '@/types/commonTypes'
 import axios from 'axios'
 
 // import Cookies from "js-cookie";
@@ -82,3 +83,7 @@ export const getAllUserTextToVoiceData = async (userId: string, page: number) =>
 //     return [];
 //   }
 // };
+
+export const createGeneratedVoices = async (data: StoreVoices) => {
+  await axiosInstance.post('text-to-voice-generations', data)
+}
