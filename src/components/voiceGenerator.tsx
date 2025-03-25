@@ -15,6 +15,7 @@ import Voicetable from '@/components/voiceTable'
 import CustomModal from '@/components/customModal'
 import { useMutation } from '@tanstack/react-query'
 import Mp3Player from './mp3Player'
+import { useCreateGeneratedVoicesMutation } from '@/services/mutation/voice'
 
 // Form schema using Zod for validation
 const formSchema = speechSchema
@@ -26,7 +27,7 @@ interface RequestData {
 
 // Function to call the API and generate the speech
 const generateSpeech = async (requestData: RequestData) => {
-  const response = await fetch('../api/tts', {
+  const response = await fetch('../../api/tts', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(requestData)
@@ -57,8 +58,18 @@ function VoiceGenerator() {
     mutationFn: generateSpeech,
     onSuccess: (audioUrl) => {
       setAudioUrl(audioUrl)
+      createHolidayMutation.mutate(holiday)
     }
   })
+
+  const holiday = {
+    data: {
+      uid: '6e3dd23a-a866-4455-bfae-262da68cc799',
+      voices: 'mdcganhy0p5zmbd6jvckiqyf',
+      title: '1 generated from postman 1'
+    }
+  }
+  const createHolidayMutation = useCreateGeneratedVoicesMutation()
 
   // Handle form submission and trigger speech generation
   function onSubmit(values: z.infer<typeof formSchema>) {
