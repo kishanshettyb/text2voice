@@ -1,7 +1,7 @@
 'use client'
 
 import { Textarea } from '@/components/ui/textarea'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ChevronDown, Loader2, Volume2, Zap } from 'lucide-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -15,14 +15,14 @@ import Voicetable from '@/components/voiceTable'
 import CustomModal from '@/components/customModal'
 import { useMutation } from '@tanstack/react-query'
 import Mp3Player from './mp3Player'
-import { useCreateGeneratedVoicesMutation } from '@/services/mutation/voice'
+import { useParams } from 'next/navigation'
 
 // Form schema using Zod for validation
 const formSchema = speechSchema
 interface RequestData {
   text: string
   speed: string
-  user_id: string
+  userId: string
 }
 
 // Function to call the API and generate the speech
@@ -34,13 +34,24 @@ const generateSpeech = async (requestData: RequestData) => {
   })
 
   const data = await response.json()
-  if (!response.ok || !data.audioUrl) {
+  console.log(data)
+  if (!response.ok || !data) {
     throw new Error('Failed to generate speech')
   }
-  return data.audioUrl
+  return data
 }
 
 function VoiceGenerator() {
+  const params = useParams()
+  const [pageUid, setPageUid] = useState('')
+
+  const uid = params?.uid // Extract 'uid' from params
+
+  useEffect(() => {
+    console.log('Extracted UID:', uid)
+    setPageUid(uid)
+  }, [uid])
+
   const [isOpen, setIsOpen] = useState(false)
   const voiceSpeed = useVoiceStore((state) => state.voiceSpeed) || '1.0x'
   const [audioUrl, setAudioUrl] = useState<string>('')
@@ -56,26 +67,36 @@ function VoiceGenerator() {
   // Use TanStack Query's useMutation for generating speech
   const { mutateAsync, isPending, isError, error } = useMutation({
     mutationFn: generateSpeech,
-    onSuccess: (audioUrl) => {
-      setAudioUrl(audioUrl)
-      createHolidayMutation.mutate(holiday)
+    onSuccess: (data) => {
+      setAudioUrl(data.audioUrl)
+      console.log(pageUid)
+      // const holiday = {
+      //   data: {
+      //     uid: pageUid,
+      //     voices: data?.strapiData?.data?.documentId,
+      //     title: 'second t2v'
+      //   }
+      // }
     }
   })
 
-  const holiday = {
-    data: {
-      uid: '6e3dd23a-a866-4455-bfae-262da68cc799',
-      voices: 'mdcganhy0p5zmbd6jvckiqyf',
-      title: '1 generated from postman 1'
-    }
-  }
-  const createHolidayMutation = useCreateGeneratedVoicesMutation()
-
   // Handle form submission and trigger speech generation
   function onSubmit(values: z.infer<typeof formSchema>) {
+    const storedUser = localStorage.getItem('user')
+
+    let userId = ''
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser) // Parse JSON
+        userId = parsedUser.documentId // Get user ID
+      } catch (error) {
+        console.error('Error parsing user from localStorage:', error)
+      }
+    }
     const requestData = {
       ...values,
-      speed: voiceSpeed
+      speed: voiceSpeed,
+      userId: userId
     }
     mutateAsync(requestData)
   }
