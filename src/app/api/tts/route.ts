@@ -13,7 +13,7 @@ const client = new textToSpeech.TextToSpeechClient()
 
 export async function POST(req: Request) {
   try {
-    const cookieStore = cookies()
+    const cookieStore = await cookies()
     const token = cookieStore.get('token')?.value
 
     if (!token) {
@@ -73,8 +73,8 @@ export async function POST(req: Request) {
       },
       body: JSON.stringify({
         data: {
-          user: user,
-          text,
+          users_permissions_user: user,
+          text: text,
           character_count: characterCount,
           voice_name: voice,
           voice_speed: speed,
@@ -87,10 +87,12 @@ export async function POST(req: Request) {
     if (!strapiRes.ok) {
       throw new Error('Failed to save in Strapi')
     }
+    const strapiData = await strapiRes.json()
 
-    return NextResponse.json({ audioUrl })
+    return NextResponse.json({ audioUrl, strapiData })
+    // return NextResponse.json({ audioUrl });
   } catch (error) {
-    console.error('TTS Error:', error)
+    console.log(error)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }
