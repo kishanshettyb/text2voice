@@ -89,7 +89,7 @@ export async function POST(req: Request) {
     }
     const strapiData = await strapiRes.json()
 
-    return NextResponse.json({ audioUrl, strapiData })
+    return NextResponse.json({ audioUrl, strapiData, token })
     // return NextResponse.json({ audioUrl });
   } catch (error) {
     console.log(error)
