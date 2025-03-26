@@ -17,6 +17,8 @@ import { useMutation } from '@tanstack/react-query'
 import Mp3Player from './mp3Player'
 import { useParams } from 'next/navigation'
 import { getUserId } from '@/utils/localStorage'
+import { TitleBar } from '@/components/titleBar'
+import useTitleStore from '@/store/title'
 
 // Form schema using Zod for validation
 const formSchema = speechSchema
@@ -27,9 +29,9 @@ interface RequestData {
 }
 interface SendData {
   uid: string
-  title: string
   voices: string
   token: string
+  title: string
 }
 
 // Function to call the API and generate the speech
@@ -72,7 +74,9 @@ const uploadTextToSpeech = async (sendData: SendData) => {
 }
 
 function VoiceGenerator() {
+  const fileTitle = useTitleStore((state) => state.title) || 'United'
   const params = useParams()
+  const [titleSave] = useState(false)
   const [pageUid, setPageUid] = useState('')
   const uid = params?.uid // Extract 'uid' from params
 
@@ -101,8 +105,8 @@ function VoiceGenerator() {
       console.log(pageUid)
       const uid = pageUid
       const token = data.token
+      const title = fileTitle
       const voices = data.strapiData.data.documentId
-      const title = 'new'
       const sendData = {
         uid,
         token,
@@ -125,9 +129,19 @@ function VoiceGenerator() {
     mutateAsync(requestData)
   }
 
+  // Update title in Zustand store based on the first 50 words in the textarea
+  const handleTextareaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    if (!titleSave) {
+      const text = event.target.value
+      const title = text.slice(0, 30) // Take only the first 10 characters
+      useTitleStore.getState().settitle(title)
+    }
+  }
   return (
-    <div className="flex flex-col md:flex-row gap-x-6 gap-y-6 lg:gap-y-0 p-6">
+    <div className="flex flex-col md:flex-row gap-x-6 gap-y-6 lg:gap-y-0 pt-3">
       <div className={`w-full ${audioUrl ? `md:w-3/4>` : ``}`}>
+        {/* <p className="mb-3 font-semibold">Title</p> */}
+        <TitleBar />
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <div className="">
@@ -162,6 +176,10 @@ function VoiceGenerator() {
                             className="dark:border-zinc-600 rounded-lg dark:active:border-zinc-500 dark:focus:border-zinc-500 dark:text-white"
                             placeholder="Type here..."
                             {...field}
+                            onChange={(e) => {
+                              field.onChange(e) // to update react-hook-form state
+                              handleTextareaChange(e) // update Zustand store
+                            }}
                           />
                         </FormControl>
                         <FormMessage />
@@ -205,6 +223,7 @@ function VoiceGenerator() {
       </div>
       {audioUrl && (
         <div className="w-full md:w-1/4">
+          <p className="text-base py-3">Records</p>
           <div className="border rounded-xl  dark:bg-zinc-900 dark:border-zinc-700  p-5">
             <Mp3Player title="test" src={audioUrl} />
           </div>
