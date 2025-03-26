@@ -16,6 +16,7 @@ import CustomModal from '@/components/customModal'
 import { useMutation } from '@tanstack/react-query'
 import Mp3Player from './mp3Player'
 import { useParams } from 'next/navigation'
+import { getUserId } from '@/utils/localStorage'
 
 // Form schema using Zod for validation
 const formSchema = speechSchema
@@ -23,6 +24,12 @@ interface RequestData {
   text: string
   speed: string
   userId: string
+}
+interface SendData {
+  uid: string
+  title: string
+  voices: string
+  token: string
 }
 
 // Function to call the API and generate the speech
@@ -41,10 +48,32 @@ const generateSpeech = async (requestData: RequestData) => {
   return data
 }
 
+const uploadTextToSpeech = async (sendData: SendData) => {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/text-to-voice-generations`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${sendData.token}`
+    },
+    body: JSON.stringify({
+      data: {
+        uid: sendData.uid,
+        voices: sendData.voices,
+        title: sendData.title
+      }
+    })
+  })
+
+  const data = await response.json()
+  if (!response.ok || !data) {
+    throw new Error('Failed to generate speech')
+  }
+  return data
+}
+
 function VoiceGenerator() {
   const params = useParams()
   const [pageUid, setPageUid] = useState('')
-
   const uid = params?.uid // Extract 'uid' from params
 
   useEffect(() => {
@@ -70,29 +99,24 @@ function VoiceGenerator() {
     onSuccess: (data) => {
       setAudioUrl(data.audioUrl)
       console.log(pageUid)
-      // const holiday = {
-      //   data: {
-      //     uid: pageUid,
-      //     voices: data?.strapiData?.data?.documentId,
-      //     title: 'second t2v'
-      //   }
-      // }
+      const uid = pageUid
+      const token = data.token
+      const voices = data.strapiData.data.documentId
+      const title = 'new'
+      const sendData = {
+        uid,
+        token,
+        voices,
+        title
+      }
+      uploadTextToSpeech(sendData)
     }
   })
 
   // Handle form submission and trigger speech generation
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const storedUser = localStorage.getItem('user')
-
-    let userId = ''
-    if (storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser) // Parse JSON
-        userId = parsedUser.documentId // Get user ID
-      } catch (error) {
-        console.error('Error parsing user from localStorage:', error)
-      }
-    }
+    const userId = getUserId()
+    console.log(userId)
     const requestData = {
       ...values,
       speed: voiceSpeed,
