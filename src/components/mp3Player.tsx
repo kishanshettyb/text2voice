@@ -34,6 +34,61 @@ const Mp3Player = ({ src, title }: { src: string; title: string }) => {
     setIsPlaying(!isPlaying)
   }
 
+  // const downloadFile = (src) => {
+  //   // Function to extract the file name from the URL
+  //   const getFileNameFromUrl = (url: string) => {
+  //     const parsedUrl = new URL(url) // Parse the URL
+  //     const pathSegments = parsedUrl.pathname.split('/') // Split the path by "/"
+  //     return pathSegments[pathSegments.length - 1] // Get the last segment (the file name)
+  //   }
+  //   const fileUrl = fetch(src).then((response) => {
+  //     response.blob().then((blob) => {
+  //       // Creating new object of PDF file
+  //       const fileURL = window.URL.createObjectURL(blob)
+
+  //       // Setting various property values
+  //       let alink = document.createElement('a')
+  //       alink.href = fileURL
+  //       alink.download = getFileNameFromUrl(src)
+  //       alink.click()
+  //     })
+  //   })
+  //   console.log(fileUrl)
+  // }
+  const downloadFile = (src: string) => {
+    // Function to extract the file name from the URL
+    const getFileNameFromUrl = (url: string): string => {
+      const parsedUrl = new URL(url) // Parse the URL
+      const pathSegments = parsedUrl.pathname.split('/') // Split the path by "/"
+      return pathSegments[pathSegments.length - 1] // Get the last segment (the file name)
+    }
+
+    // Fetch the file
+    fetch(src)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch the file')
+        }
+        return response.blob() // Convert response to blob
+      })
+      .then((blob) => {
+        // Create an object URL for the blob
+        const fileURL = window.URL.createObjectURL(blob)
+
+        // Create a link element and trigger the download
+        const alink = document.createElement('a')
+        alink.href = fileURL
+        alink.download = getFileNameFromUrl(src) // Set the file name from URL
+        alink.click() // Trigger the download
+
+        // Clean up the object URL after download
+        window.URL.revokeObjectURL(fileURL)
+      })
+      .catch((error) => {
+        console.error('Download failed:', error)
+      })
+  }
+
   return (
     <div>
       <div className="flex flex-1 pb-2 justify-between items-center">
@@ -64,15 +119,15 @@ const Mp3Player = ({ src, title }: { src: string; title: string }) => {
             <Progress value={progress} className="h-2  w-100" />
           </div>
           <div className="flex items-center space-x-3">
-            <a href={src} download className="ml-auto">
-              <Button
-                size="sm"
-                variant="secondary"
-                className="rounded-full w-[35px] h-[35px] flex justify-center items-center"
-              >
-                <Download size={12} />
-              </Button>
-            </a>
+            <Button
+              onClick={() => downloadFile(src)}
+              size="sm"
+              variant="secondary"
+              className="rounded-full w-[35px] h-[35px] flex justify-center items-center"
+            >
+              <Download size={12} />
+            </Button>
+            {/* </a> */}
           </div>
         </div>
 
