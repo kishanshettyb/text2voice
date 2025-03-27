@@ -3,7 +3,7 @@ import React from 'react'
 
 function TextToSpeechPage() {
   return (
-    <div className="flex-1 ">
+    <div className="flex-1">
       <VoiceGenerator />
     </div>
   )
