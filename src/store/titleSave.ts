@@ -8,7 +8,7 @@ interface TitleSaveStore {
 }
 
 const useTitleSaveStore = create<TitleSaveStore>((set) => ({
-  titleSave: false,
+  titleSave: true,
   setTitleSave: (fileTitle) => set({ titleSave: fileTitle })
 }))
 

@@ -6,7 +6,7 @@ import { CheckSquare, Edit } from 'lucide-react'
 import useTitleSaveStore from '@/store/titleSave'
 
 export function TitleBar() {
-  const [setIsEditable] = useState(false)
+  const [isEditable, setIsEditable] = useState(false)
   const { title, settitle } = useTitleStore()
   const { titleSave, setTitleSave } = useTitleSaveStore()
 
@@ -18,7 +18,7 @@ export function TitleBar() {
   // Handle input change
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     settitle(event.target.value)
-    setTitleSave(true)
+    setTitleSave(false)
   }
 
   return (
@@ -29,11 +29,11 @@ export function TitleBar() {
         className="border-0 md:text-[1rem]"
         value={title}
         onChange={handleInputChange}
-        // readOnly={!isEditable} // Make input read-only when not in edit mode
+        readOnly={!isEditable} // Make input read-only when not in edit mode
       />
 
-      {titleSave ? (
-        <Button onClick={() => setTitleSave(false)}>
+      {!titleSave ? (
+        <Button onClick={() => setTitleSave(true)}>
           <CheckSquare />
           Save
         </Button>
