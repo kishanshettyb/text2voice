@@ -19,6 +19,7 @@ import { useParams } from 'next/navigation'
 import { getUserId } from '@/utils/localStorage'
 import { TitleBar } from '@/components/titleBar'
 import useTitleStore from '@/store/title'
+import useTitleSaveStore from '@/store/titleSave'
 
 // Form schema using Zod for validation
 const formSchema = speechSchema
@@ -76,7 +77,6 @@ const uploadTextToSpeech = async (sendData: SendData) => {
 function VoiceGenerator() {
   const fileTitle = useTitleStore((state) => state.title) || 'United'
   const params = useParams()
-  const [titleSave] = useState(false)
   const [pageUid, setPageUid] = useState('')
   const uid = params?.uid // Extract 'uid' from params
 
@@ -87,6 +87,7 @@ function VoiceGenerator() {
 
   const [isOpen, setIsOpen] = useState(false)
   const voiceSpeed = useVoiceStore((state) => state.voiceSpeed) || '1.0x'
+  const titleSaved = useTitleSaveStore((state) => state.titleSave) || false
   const [audioUrl, setAudioUrl] = useState<string>('')
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -102,7 +103,6 @@ function VoiceGenerator() {
     mutationFn: generateSpeech,
     onSuccess: (data) => {
       setAudioUrl(data.audioUrl)
-      console.log(pageUid)
       const uid = pageUid
       const token = data.token
       const title = fileTitle
@@ -131,7 +131,7 @@ function VoiceGenerator() {
 
   // Update title in Zustand store based on the first 50 words in the textarea
   const handleTextareaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    if (!titleSave) {
+    if (titleSaved == false) {
       const text = event.target.value
       const title = text.slice(0, 30) // Take only the first 10 characters
       useTitleStore.getState().settitle(title)
