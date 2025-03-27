@@ -192,8 +192,7 @@ function VoiceGenerator() {
                     <Button
                       disabled={!form.formState.isValid || isPending}
                       type="submit"
-                      size="lg"
-                      className="bg-green-500 text-white hover:bg-green-600 mt-4 text-lg   py-6   w-full"
+                      className="bg-green-500 text-white hover:bg-green-600 mt-4 text-lg     w-full"
                     >
                       {isPending ? (
                         <>
@@ -202,8 +201,8 @@ function VoiceGenerator() {
                         </>
                       ) : (
                         <>
-                          <Zap size={30} />
-                          {audioUrl ? `Regenerate` : `Generate`}
+                          <Zap size={24} />
+                          {audioUrl ? `Regenerate Speech` : `Generate Speech`}
                         </>
                       )}
                     </Button>
