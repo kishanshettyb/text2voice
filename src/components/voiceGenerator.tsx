@@ -19,7 +19,6 @@ import { useParams } from 'next/navigation'
 import { getUserId } from '@/utils/localStorage'
 import { TitleBar } from '@/components/titleBar'
 import useTitleStore from '@/store/title'
-import useTitleSaveStore from '@/store/titleSave'
 
 // Form schema using Zod for validation
 const formSchema = speechSchema
@@ -79,7 +78,7 @@ function VoiceGenerator() {
   const params = useParams()
   const [pageUid, setPageUid] = useState('')
   const uid = params?.uid // Extract 'uid' from params
-
+  const [textCount, setTextCount] = useState(0)
   useEffect(() => {
     console.log('Extracted UID:', uid)
     setPageUid(uid)
@@ -87,8 +86,8 @@ function VoiceGenerator() {
 
   const [isOpen, setIsOpen] = useState(false)
   const voiceSpeed = useVoiceStore((state) => state.voiceSpeed) || '1.0x'
-  const titleSaved = useTitleSaveStore((state) => state.titleSave) || false
   const [audioUrl, setAudioUrl] = useState<string>('')
+  const [audioText, setAudioText] = useState<string>('')
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -102,11 +101,13 @@ function VoiceGenerator() {
   const { mutateAsync, isPending, isError, error } = useMutation({
     mutationFn: generateSpeech,
     onSuccess: (data) => {
-      setAudioUrl(data.audioUrl)
+      setAudioUrl(data.documentId)
+      setAudioText(data.text)
+
       const uid = pageUid
       const token = data.token
       const title = fileTitle
-      const voices = data.strapiData.data.documentId
+      const voices = data.documentId
       const sendData = {
         uid,
         token,
@@ -131,16 +132,19 @@ function VoiceGenerator() {
 
   // Update title in Zustand store based on the first 50 words in the textarea
   const handleTextareaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    if (titleSaved == false) {
-      const text = event.target.value
-      const title = text.slice(0, 30) // Take only the first 10 characters
-      useTitleStore.getState().settitle(title)
+    const text = event.target.value
+    const title = text.slice(0, 30) // Take only the first 10 characters
+    useTitleStore.getState().settitle(title)
+    console.log(text.length)
+    let textLength = text.length
+    if (textLength > 5000) {
+      textLength = 5000
     }
+    setTextCount(textLength)
   }
   return (
     <div className="flex flex-col md:flex-row gap-x-6 gap-y-6 lg:gap-y-0 pt-3">
       <div className={`w-full ${audioUrl ? `md:w-3/4>` : ``}`}>
-        {/* <p className="mb-3 font-semibold">Title</p> */}
         <TitleBar />
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -187,12 +191,18 @@ function VoiceGenerator() {
                     )}
                   />
                 </div>
-                <div className=" flex justify-start">
-                  <div className="w-1/4">
+                <div className=" flex items-center justify-between">
+                  <div>
+                    <p className="text-xs opacity-50">3900 credits remaining</p>
+                  </div>
+                  <div className="flex justify-end gap-x-5 mt-5 items-center flex-row">
+                    <div className="w-full">
+                      <p className="text-xs opacity-50">{textCount} / 5,000 characters</p>
+                    </div>
                     <Button
                       disabled={!form.formState.isValid || isPending}
                       type="submit"
-                      className="bg-green-500 text-white hover:bg-green-600 mt-4 text-lg     w-full"
+                      className="bg-green-500 text-white hover:bg-green-600  w-full"
                     >
                       {isPending ? (
                         <>
@@ -224,7 +234,7 @@ function VoiceGenerator() {
         <div className="w-full md:w-1/4">
           <p className="text-base py-3">Records</p>
           <div className="border rounded-xl  dark:bg-zinc-900 dark:border-zinc-700  p-5">
-            <Mp3Player title="test" src={audioUrl} />
+            <Mp3Player src={audioUrl} title={audioText} />
           </div>
         </div>
       )}
