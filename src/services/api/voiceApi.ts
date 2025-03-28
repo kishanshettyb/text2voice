@@ -1,8 +1,6 @@
 import { StoreVoices } from '@/types/commonTypes'
 import axios from 'axios'
 
-// import Cookies from "js-cookie";
-
 export const getAllVoices = async () => {
   const response = await fetch('../api/voices')
   if (!response.ok) {
@@ -19,7 +17,43 @@ export const getAllLanguages = async () => {
   return response.json()
 }
 
-// const token = Cookies.get('token');
+// import axios from "axios";
+// import Cookies from "js-cookie";
+
+// const axiosInstance = axios.create({
+//   baseURL: process.env.NEXT_PUBLIC_API_URL, // Your Strapi backend URL
+//   withCredentials: true, // Allow cookies to be sent with requests
+// });
+
+// import axios from "axios";
+// import Cookies from "js-cookie";
+
+// const axiosInstance = axios.create({
+//   baseURL: process.env.NEXT_PUBLIC_API_URL, // Your Strapi backend URL
+//   withCredentials: true, // Allow cookies to be sent with requests
+// });
+
+// // Add an interceptor to include the token from cookies
+// axiosInstance.interceptors.request.use((config) => {
+//   const token = Cookies.get("token"); // Get token from cookies
+//   if (token) {
+//     config.headers.Authorization = `Bearer ${token}`;
+//   }
+//   return config;
+// });
+
+// export default axiosInstance;
+
+// axiosInstance.interceptors.request.use((config) => {
+//   const token = Cookies.get("token"); // Get token from cookies
+//   if (token) {
+//     config.headers.Authorization = `Bearer ${token}`;
+//   }
+//   return config;
+// });
+
+// export default axiosInstance;
+
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
   headers: {
@@ -27,17 +61,13 @@ const axiosInstance = axios.create({
   }
 })
 
-// export const getAllUserTextToVoiceData = async (userId: string) => {
-//   const response = await axiosInstance.get(
-//     `text-to-voice-generations?filters[user][documentId][$eq]=${userId}&populate=user&pagination[pageSize]=10`
-//   );
-//   return response.data; // ✅ Extract and return only the data
-// };
-
-export const getAllUserTextToVoiceData = async (userId: string, page: number) => {
+export const getAllUserTextToVoiceData = async (
+  userId: string
+  // page: number
+) => {
   try {
     const response = await axiosInstance.get(
-      `text-to-voice-generations?filters[user][documentId][$eq]=${userId}&&populate=user&pagination[page]=${page}&pagination[pageSize]=10&_sort=created_at:desc&_start=0&_limit=10`
+      `voices?filters[users_permissions_user][documentId][$eq]=${userId}`
     )
 
     // Ensure response contains the expected structure
