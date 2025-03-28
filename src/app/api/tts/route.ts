@@ -57,8 +57,13 @@ export async function POST(req: Request) {
     // Upload to Cloudinary
     const cloudinaryResponse = await new Promise((resolve, reject) => {
       cloudinary.v2.uploader
-        .upload_stream({ resource_type: 'video', folder: 'tts_audio' }, (error, result) =>
-          error ? reject(error) : resolve(result)
+        .upload_stream(
+          {
+            resource_type: 'video',
+            type: 'authenticated',
+            folder: 'tts_audio'
+          },
+          (error, result) => (error ? reject(error) : resolve(result))
         )
         .end(audioBuffer)
     })
@@ -88,8 +93,10 @@ export async function POST(req: Request) {
       throw new Error('Failed to save in Strapi')
     }
     const strapiData = await strapiRes.json()
+    const documentId = strapiData?.data.documentId
+    const audioText = strapiData?.data.text.slice(0, 30)
 
-    return NextResponse.json({ audioUrl, strapiData, token })
+    return NextResponse.json({ documentId, token, audioText })
     // return NextResponse.json({ audioUrl });
   } catch (error) {
     console.log(error)
