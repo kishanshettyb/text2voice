@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import textToSpeech from '@google-cloud/text-to-speech'
 import cloudinary from 'cloudinary'
-import { cookies } from 'next/headers'
+import Cookies from 'js-cookie'
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -13,13 +13,10 @@ const client = new textToSpeech.TextToSpeechClient()
 
 export async function POST(req: Request) {
   try {
-    const cookieStore = await cookies()
-    const token = cookieStore.get('token')?.value
-
+    const token = Cookies.get('token')
     if (!token) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-
     const { text, voice = 'en-US-Wavenet-D', audioFormat = 'MP3', speed, userId } = await req.json()
     const value = speed
     const voiceSpeed = parseFloat(value)
