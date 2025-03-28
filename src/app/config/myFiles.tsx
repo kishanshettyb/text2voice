@@ -2,11 +2,12 @@
 
 import { Button } from '@/components/ui/button'
 import { ColumnDef } from '@tanstack/react-table'
-import { Download } from 'lucide-react'
+import { Download, Edit2 } from 'lucide-react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import moment from 'moment'
 import { Checkbox } from '@/components/ui/checkbox'
 import { DataTableColumnHeader } from '@/components/DataTableColumnHeader'
+import Link from 'next/link'
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -79,11 +80,28 @@ export const columns: ColumnDef<Payment>[] = [
     accessorKey: 'audio_url',
     header: 'Download',
     cell: ({ row }) => (
-      <Button asChild variant="outline">
-        <a href={row.getValue('audio_url')} download={row.getValue('audio_url')}>
-          <Download />
-        </a>
-      </Button>
+      <div className="flex gap-x-2">
+        <Button asChild variant="outline">
+          <a href={row.getValue('audio_url')} download={row.getValue('audio_url')}>
+            <Download />
+          </a>
+        </Button>
+      </div>
+    )
+  },
+  {
+    accessorKey: 'documentId',
+    header: 'Download',
+    cell: ({ row }) => (
+      <div className="flex gap-x-2">
+        <Link href={`/studio/text-to-speech/${row.getValue('documentId')}?edit=true`}>
+          <Button asChild variant="outline">
+            <a href={row.getValue('audio_url')} download={row.getValue('audio_url')}>
+              <Edit2 />
+            </a>
+          </Button>
+        </Link>
+      </div>
     )
   }
 ]

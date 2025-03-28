@@ -2,10 +2,11 @@
 import { columns } from '@/app/config/myFiles'
 import { MyFilesDataTable } from '@/components/myFilesDataTable'
 import { useGetAllUserTextToVoiceData } from '@/services/queries/voices'
+import { getUserId } from '@/utils/localStorage'
 import { useState } from 'react'
 
 export default function MyFilesPage() {
-  const userId = 'pufpt61m03feyks5ck8adn31'
+  const userId = getUserId()
   // const userTextToVoiceData = useGetAllUserTextToVoiceData(userId)
   const [page] = useState(1)
   const { data = [], isLoading, error } = useGetAllUserTextToVoiceData(userId, page)
