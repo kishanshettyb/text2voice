@@ -2,6 +2,7 @@
 
 import { createContext, useState, useEffect, useContext } from 'react'
 import { usePathname } from 'next/navigation'
+import Cookies from 'js-cookie'
 
 interface User {
   email: string
@@ -21,10 +22,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname()
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user')
+    // Get the stored user data from cookies
+    const storedUser = Cookies.get('user') // Assuming you store the full user object in JSON format
+
     if (storedUser) {
-      setUser(JSON.parse(storedUser))
+      // If the cookie exists, parse it to get the user object
+      const userData = JSON.parse(storedUser) as User
+      setUser(userData)
     } else {
+      // If no user cookie, set user to null
       setUser(null)
     }
   }, [pathname])

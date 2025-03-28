@@ -34,29 +34,7 @@ const Mp3Player = ({ src, title }: { src: string; title: string }) => {
     setIsPlaying(!isPlaying)
   }
 
-  // const downloadFile = (src) => {
-  //   // Function to extract the file name from the URL
-  //   const getFileNameFromUrl = (url: string) => {
-  //     const parsedUrl = new URL(url) // Parse the URL
-  //     const pathSegments = parsedUrl.pathname.split('/') // Split the path by "/"
-  //     return pathSegments[pathSegments.length - 1] // Get the last segment (the file name)
-  //   }
-  //   const fileUrl = fetch(src).then((response) => {
-  //     response.blob().then((blob) => {
-  //       // Creating new object of PDF file
-  //       const fileURL = window.URL.createObjectURL(blob)
-
-  //       // Setting various property values
-  //       let alink = document.createElement('a')
-  //       alink.href = fileURL
-  //       alink.download = getFileNameFromUrl(src)
-  //       alink.click()
-  //     })
-  //   })
-  //   console.log(fileUrl)
-  // }
   const downloadFile = (src: string) => {
-    // Function to extract the file name from the URL
     const getFileNameFromUrl = (url: string): string => {
       const parsedUrl = new URL(url) // Parse the URL
       const pathSegments = parsedUrl.pathname.split('/') // Split the path by "/"

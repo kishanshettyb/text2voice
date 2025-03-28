@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -19,6 +18,8 @@ import { z } from 'zod'
 import { Eye, EyeOff, LoaderCircle } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useLoginMutation } from '@/services/mutation/login'
+import axios from 'axios'
 
 export type LoginCredentials = {
   identifier: string
@@ -34,8 +35,7 @@ export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
-
+  const mutation = useLoginMutation()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -47,29 +47,19 @@ export function LoginForm() {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true)
     setError(null)
-
-    try {
-      const res = await fetch('../api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(values)
-      })
-
-      const data = await res.json()
-
-      if (data.user) {
-        localStorage.setItem('user', JSON.stringify(data.user))
-        document.cookie = `token=${data.token}; path=/`
-        router.push('/studio')
-      } else {
-        setError('Invalid credentials')
-      }
-    } catch (err) {
-      console.log(err)
-      setError('Something went wrong. Please try again.')
-    } finally {
-      setIsLoading(false)
+    const { identifier, password } = values
+    const loginData: LoginCredentials = {
+      identifier: identifier,
+      password: password
     }
+    mutation.mutate(loginData, {
+      onError: (error) => {
+        if (axios.isAxiosError(error)) {
+          setError(error.response?.data?.error?.message || error.message)
+        }
+        setIsLoading(false)
+      }
+    })
   }
 
   return (
