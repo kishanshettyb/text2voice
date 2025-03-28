@@ -2,11 +2,11 @@
 import { columns } from '@/app/config/myFiles'
 import { MyFilesDataTable } from '@/components/myFilesDataTable'
 import { useGetAllUserTextToVoiceData } from '@/services/queries/voices'
-import { getUserId } from '@/utils/localStorage'
 import { useState } from 'react'
+import Cookies from 'js-cookie'
 
 export default function MyFilesPage() {
-  const userId = getUserId()
+  const userId = Cookies.get('userId')
   const [page] = useState(1)
   const { data = [], isLoading, error } = useGetAllUserTextToVoiceData(userId, page)
 
