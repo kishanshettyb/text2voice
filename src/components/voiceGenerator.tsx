@@ -32,6 +32,7 @@ interface SendData {
   voices: string
   token: string
   title: string
+  userId: string
 }
 
 // Function to call the API and generate the speech
@@ -51,6 +52,7 @@ const generateSpeech = async (requestData: RequestData) => {
 }
 
 const uploadTextToSpeech = async (sendData: SendData) => {
+  const userId = getUserId()
   const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/text-to-voice-generations`, {
     method: 'POST',
     headers: {
@@ -61,7 +63,8 @@ const uploadTextToSpeech = async (sendData: SendData) => {
       data: {
         uid: sendData.uid,
         voices: sendData.voices,
-        title: sendData.title
+        title: sendData.title,
+        users_permissions_user: userId
       }
     })
   })
@@ -108,11 +111,13 @@ function VoiceGenerator() {
       const token = data.token
       const title = fileTitle
       const voices = data.documentId
+      const userId = data.userId
       const sendData = {
         uid,
         token,
         voices,
-        title
+        title,
+        userId
       }
       uploadTextToSpeech(sendData)
     }
