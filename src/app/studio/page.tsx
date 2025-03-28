@@ -7,8 +7,8 @@ export default function Dashboard() {
 
   return (
     <div>
-      <h1>Welcome {user ? user.email : 'Guest'}</h1>
-      <h1>Welcome {user ? user.documentId : 'Guest'}</h1>
+      <h1>Welcome {user ? user.username : 'Guest'}</h1>
+      <h2>Document ID: {user ? user.documentId : 'N/A'}</h2>
     </div>
   )
 }

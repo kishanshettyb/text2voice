@@ -40,12 +40,7 @@ export const columns: ColumnDef<Payment>[] = [
     enableSorting: false,
     enableHiding: false
   },
-  {
-    accessorKey: 'id',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Created Date" />,
-    cell: ({ row }) => <p>{row.getValue('id')}</p>,
-    enableSorting: false
-  },
+
   {
     accessorKey: 'createdAt',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Created Date" />,
@@ -77,6 +72,21 @@ export const columns: ColumnDef<Payment>[] = [
     )
   },
   {
+    accessorKey: 'documentId',
+    header: 'Action',
+    cell: ({ row }) => (
+      <div>
+        <Link href={`/studio/text-to-speech/${row.getValue('documentId')}?edit=true`}>
+          <Button asChild variant="outline">
+            <a href={row.getValue('audio_url')} download={row.getValue('audio_url')}>
+              <Edit2 />
+            </a>
+          </Button>
+        </Link>
+      </div>
+    )
+  },
+  {
     accessorKey: 'audio_url',
     header: 'Download',
     cell: ({ row }) => (
@@ -86,21 +96,6 @@ export const columns: ColumnDef<Payment>[] = [
             <Download />
           </a>
         </Button>
-      </div>
-    )
-  },
-  {
-    accessorKey: 'documentId',
-    header: 'Download',
-    cell: ({ row }) => (
-      <div className="flex gap-x-2">
-        <Link href={`/studio/text-to-speech/${row.getValue('documentId')}?edit=true`}>
-          <Button asChild variant="outline">
-            <a href={row.getValue('audio_url')} download={row.getValue('audio_url')}>
-              <Edit2 />
-            </a>
-          </Button>
-        </Link>
       </div>
     )
   }
