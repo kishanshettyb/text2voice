@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import textToSpeech from '@google-cloud/text-to-speech'
 import cloudinary from 'cloudinary'
-import Cookies from 'js-cookie'
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -13,7 +12,7 @@ const client = new textToSpeech.TextToSpeechClient()
 
 export async function POST(req: Request) {
   try {
-    const token = Cookies.get('token')
+    const token = req.cookies.get('token').value
     if (!token) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -67,6 +66,20 @@ export async function POST(req: Request) {
     const audioUrl = cloudinaryResponse.secure_url
 
     // Save TTS record in Strapi
+    console.log(token)
+    console.log(
+      JSON.stringify({
+        data: {
+          users_permissions_user: user,
+          text: text,
+          character_count: characterCount,
+          voice_name: voice,
+          voice_speed: speed,
+          audio_format: audioFormat,
+          audio_url: audioUrl
+        }
+      })
+    )
     const strapiRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/voices`, {
       method: 'POST',
       headers: {
