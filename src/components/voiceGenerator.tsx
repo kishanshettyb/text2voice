@@ -180,9 +180,7 @@ function VoiceGenerator() {
           </div>
         </div>
       ) : (
-        <>
-          <p>no data</p>
-        </>
+        <></>
       )}
     </div>
   )
