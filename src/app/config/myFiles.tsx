@@ -76,13 +76,11 @@ export const columns: ColumnDef<Payment>[] = [
     header: 'Action',
     cell: ({ row }) => (
       <div>
-        <Link href={`/studio/text-to-speech/${row.getValue('uid')}?edit=true`}>
-          <Button asChild variant="outline">
-            <a href={row.getValue('audio_url')} download={row.getValue('audio_url')}>
-              <Edit2 />
-            </a>
-          </Button>
-        </Link>
+        <Button asChild variant="outline">
+          <Link href={`/studio/text-to-speech/${row.getValue('uid')}?edit=true`}>
+            <Edit2 />
+          </Link>
+        </Button>
       </div>
     )
   },
