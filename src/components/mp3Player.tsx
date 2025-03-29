@@ -4,12 +4,16 @@ import { useState, useRef, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Play, Pause, Download } from 'lucide-react'
-
-const Mp3Player = ({ src, title }: { src: string; title: string }) => {
+import { useGetUserVoicesByUid } from '@/services/queries/voices'
+import { useParams } from 'next/navigation'
+import moment from 'moment'
+const Mp3Player = ({ src }: { src: string }) => {
   const [isPlaying, setIsPlaying] = useState(false)
   const [progress, setProgress] = useState(0)
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const { uid } = useParams()
 
+  const { data: getUserCreatedVoicebypageId } = useGetUserVoicesByUid(uid)
   useEffect(() => {
     const audio = audioRef.current
     if (!audio) return
@@ -69,48 +73,50 @@ const Mp3Player = ({ src, title }: { src: string; title: string }) => {
 
   return (
     <div>
-      <div className="flex flex-1 pb-2 justify-between items-center">
-        <div className="w-1/2 ">
-          <p className="text-xs font-semibold line-clamp-1">
-            {title} Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta dolorem earum
-            esse qui aliquam labore cupiditate assumenda, tenetur temporibus, sequi est
-            reprehenderit voluptatibus fuga, veniam inventore. Doloremque suscipit deserunt a?
-          </p>
-        </div>
-        <div>
-          <p className="text-xs line-clamp-1">10:30 am</p>
-        </div>
-      </div>
-      <div className="w-full max-w-sm p-2 border rounded-2xl  bg-white dark:bg-zinc-950 dark:border-zinc-800">
-        <div className="flex items-center justify-between gap-x-3">
-          <div>
-            <Button
-              size="sm"
-              onClick={togglePlay}
-              variant="outline"
-              className="rounded-full w-[35px] h-[35px] flex justify-center items-center"
-            >
-              {isPlaying ? <Pause size={12} /> : <Play size={18} />}
-            </Button>
+      {getUserCreatedVoicebypageId?.data?.data.map((item) => (
+        <div key={item.id} className="mb-5">
+          <div className="flex flex-1 pb-2 justify-between items-center">
+            <div className="w-1/2 ">
+              <p className="text-xs font-semibold line-clamp-1">{item.title}</p>
+            </div>
+            <div>
+              <p className="text-[10px] line-clamp-1">
+                {moment(item.createdAt).format(' DD-MM hh:mm:ss A ')}
+              </p>
+            </div>
           </div>
-          <div className="w-full">
-            <Progress value={progress} className="h-2  w-100" />
-          </div>
-          <div className="flex items-center space-x-3">
-            <Button
-              onClick={() => downloadFile(src)}
-              size="sm"
-              variant="secondary"
-              className="rounded-full w-[35px] h-[35px] flex justify-center items-center"
-            >
-              <Download size={12} />
-            </Button>
-            {/* </a> */}
-          </div>
-        </div>
+          <div className="w-full max-w-sm p-2 border rounded-2xl  bg-white dark:bg-zinc-950 dark:border-zinc-800">
+            <div className="flex items-center justify-between gap-x-3">
+              <div>
+                <Button
+                  size="sm"
+                  onClick={togglePlay}
+                  variant="outline"
+                  className="rounded-full w-[35px] h-[35px] flex justify-center items-center"
+                >
+                  {isPlaying ? <Pause size={12} /> : <Play size={18} />}
+                </Button>
+              </div>
+              <div className="w-full">
+                <Progress value={progress} className="h-2  w-100" />
+              </div>
+              <div className="flex items-center space-x-3">
+                <Button
+                  onClick={() => downloadFile(src)}
+                  size="sm"
+                  variant="secondary"
+                  className="rounded-full w-[35px] h-[35px] flex justify-center items-center"
+                >
+                  <Download size={12} />
+                </Button>
+                {/* </a> */}
+              </div>
+            </div>
 
-        <audio ref={audioRef} src={src} />
-      </div>
+            <audio ref={audioRef} src={src} />
+          </div>
+        </div>
+      ))}
     </div>
   )
 }

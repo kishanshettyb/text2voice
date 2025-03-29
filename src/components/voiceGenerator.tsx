@@ -15,73 +15,21 @@ import Voicetable from '@/components/voiceTable'
 import CustomModal from '@/components/customModal'
 import { useMutation } from '@tanstack/react-query'
 import Mp3Player from './mp3Player'
-import { useParams } from 'next/navigation'
 import { TitleBar } from '@/components/titleBar'
 import useTitleStore from '@/store/title'
 import Cookies from 'js-cookie'
 import { generateSpeech, uploadTextToSpeech } from '@/services/api/generateSpeech'
+import { useParams, useSearchParams } from 'next/navigation'
 
-// Form schema using Zod for validation
 const formSchema = speechSchema
-// interface RequestData {
-//   text: string
-//   speed: string
-//   userId: string | undefined
-// }
-// interface SendData {
-//   uid: string
-//   voices: string
-//   token: string
-//   title: string
-//   userId: string
-// }
-
-// Function to call the API and generate the speech
-// const generateSpeech = async (requestData: RequestData) => {
-//   const response = await fetch('../../api/tts', {
-//     method: 'POST',
-//     headers: { 'Content-Type': 'application/json' },
-//     body: JSON.stringify(requestData)
-//   })
-
-//   const data = await response.json()
-//   console.log(data)
-//   if (!response.ok || !data) {
-//     throw new Error('Failed to generate speech')
-//   }
-//   return data
-// }
-
-// const uploadTextToSpeech = async (sendData: SendData) => {
-//   const userId = Cookies.get('userId')
-//   const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/text-to-voice-generations`, {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/json',
-//       Authorization: `Bearer ${sendData.token}`
-//     },
-//     body: JSON.stringify({
-//       data: {
-//         uid: sendData.uid,
-//         voices: sendData.voices,
-//         title: sendData.title,
-//         users_permissions_user: userId
-//       }
-//     })
-//   })
-
-//   const data = await response.json()
-//   if (!response.ok || !data) {
-//     throw new Error('Failed to generate speech')
-//   }
-//   return data
-// }
 
 function VoiceGenerator() {
   const fileTitle = useTitleStore((state) => state.title) || 'United'
   const params = useParams()
   const [pageUid, setPageUid] = useState('')
   const uid = params?.uid
+  const searchParams = useSearchParams()
+  const edit = searchParams.get('edit')
   const [textCount, setTextCount] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
   const voiceSpeed = useVoiceStore((state) => state.voiceSpeed) || '1.0x'
@@ -136,7 +84,7 @@ function VoiceGenerator() {
 
   return (
     <div className="flex flex-col md:flex-row gap-x-6 gap-y-6 lg:gap-y-0 pt-3">
-      <div className={`w-full ${audioUrl ? 'md:w-3/4>' : ''}`}>
+      <div className={`w-full ${audioUrl || edit === 'true' ? 'md:w-3/4 lg:2/3 xl:w-4/5' : ''}`}>
         <TitleBar />
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -224,13 +172,17 @@ function VoiceGenerator() {
           </form>
         </Form>
       </div>
-      {audioUrl && (
-        <div className="w-full md:w-1/4">
+      {audioUrl || edit === 'true' ? (
+        <div className="w-full md:w-1/4 lg:w-1/3 xl:1/5">
           <p className="text-base py-3">Records</p>
           <div className="border rounded-xl  dark:bg-zinc-900 dark:border-zinc-700  p-5">
             <Mp3Player src={audioUrl} title={audioText} />
           </div>
         </div>
+      ) : (
+        <>
+          <p>no data</p>
+        </>
       )}
     </div>
   )
