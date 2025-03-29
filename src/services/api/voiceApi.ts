@@ -43,20 +43,10 @@ export const getAllUserTextToVoiceData = async (
   }
 }
 
-type T2Vprops = {
-  uid: string
-}
-
-export const getUserVoicesByUid = async (uid: string): Promise<T2Vprops> => {
-  try {
-    const response = await axiosInstance.get<T2Vprops>(
-      `text-to-voice-generations?populate=voices.users_permissions_user.subscription&pagination[page]=1&pagination[pageSize]=10&filters[users_permissions_user][documentId]=${uid}`
-    )
-    return response.data
-  } catch (error) {
-    console.log('Error fetching domains:', error)
-    throw error
-  }
+export const getUserVoicesByUid = async (uid: string) => {
+  return await axiosInstance.get(
+    `text-to-voice-generations?populate=users_permissions_user&filters[uid]=${uid}&sort=createdAt:desc`
+  )
 }
 
 export const createGeneratedVoices = async (data: StoreVoices) => {
