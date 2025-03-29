@@ -33,7 +33,7 @@ export const getAllUserTextToVoiceData = async (
 ) => {
   try {
     const response = await axiosInstance.get(
-      `voices?filters[users_permissions_user][documentId][$eq]=${userId}`
+      `text-to-voice-generations?populate=*&filters[voices][documentId]=${userId}`
     )
     const data = response.data?.data ?? [] // ✅ Extract 'data' array, or return empty array
     return Array.isArray(data) ? data : [] // ✅ Ensure it's always an array

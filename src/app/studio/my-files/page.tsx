@@ -17,6 +17,7 @@ export default function MyFilesPage() {
     const dateB = new Date(b.createdAt).getTime() || 0
     return dateB - dateA // Sort in descending order (newest first)
   })
+
   return (
     <div className="container mx-auto p-4 border rounded-2xl">
       <MyFilesDataTable
