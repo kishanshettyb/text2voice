@@ -53,6 +53,10 @@ export function LoginForm() {
       password: password
     }
     mutation.mutate(loginData, {
+      onSuccess: () => {
+        setIsLoading(false)
+      },
+
       onError: (error) => {
         if (axios.isAxiosError(error)) {
           setError(error.response?.data?.error?.message || error.message)
