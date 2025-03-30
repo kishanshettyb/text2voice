@@ -73,6 +73,7 @@ export async function POST(req: Request) {
     })
 
     const audioUrl = cloudinaryResponse.secure_url
+    console.log(audioUrl)
 
     // Save TTS record in Strapi
     const strapiRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/voices`, {
