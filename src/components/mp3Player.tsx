@@ -12,8 +12,8 @@ const Mp3Player = ({ src }: { src: string }) => {
   const [progress, setProgress] = useState(0)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const { uid } = useParams()
-
-  const { data: getUserCreatedVoicebypageId } = useGetUserVoicesByUid(uid)
+  const userUid = Array.isArray(uid) ? uid[0] : uid || ''
+  const { data: getUserCreatedVoicebypageId } = useGetUserVoicesByUid(userUid)
   useEffect(() => {
     const audio = audioRef.current
     if (!audio) return
@@ -73,50 +73,52 @@ const Mp3Player = ({ src }: { src: string }) => {
 
   return (
     <div>
-      {getUserCreatedVoicebypageId?.data?.data.map((item) => (
-        <div key={item.id} className="mb-5">
-          <div className="flex flex-1 pb-2 justify-between items-center">
-            <div className="w-1/2 ">
-              <p className="text-xs font-semibold line-clamp-1">{item.title}</p>
-            </div>
-            <div>
-              <p className="text-[10px] line-clamp-1">
-                {moment(item.createdAt).format(' DD-MM hh:mm:ss A ')}
-              </p>
-            </div>
-          </div>
-          <div className="w-full max-w-sm p-2 border rounded-2xl  bg-white dark:bg-zinc-950 dark:border-zinc-800">
-            <div className="flex items-center justify-between gap-x-3">
+      {getUserCreatedVoicebypageId?.data?.data.map(
+        (item: { id: string; title: string; createdAt: string }) => (
+          <div key={item.id} className="mb-5">
+            <div className="flex flex-1 pb-2 justify-between items-center">
+              <div className="w-1/2 ">
+                <p className="text-xs font-semibold line-clamp-1">{item.title}</p>
+              </div>
               <div>
-                <Button
-                  size="sm"
-                  onClick={togglePlay}
-                  variant="outline"
-                  className="rounded-full w-[35px] h-[35px] flex justify-center items-center"
-                >
-                  {isPlaying ? <Pause size={12} /> : <Play size={18} />}
-                </Button>
-              </div>
-              <div className="w-full">
-                <Progress value={progress} className="h-2  w-100" />
-              </div>
-              <div className="flex items-center space-x-3">
-                <Button
-                  onClick={() => downloadFile(src)}
-                  size="sm"
-                  variant="secondary"
-                  className="rounded-full w-[35px] h-[35px] flex justify-center items-center"
-                >
-                  <Download size={12} />
-                </Button>
-                {/* </a> */}
+                <p className="text-[10px] line-clamp-1">
+                  {moment(item.createdAt).format(' DD-MM hh:mm:ss A ')}
+                </p>
               </div>
             </div>
+            <div className="w-full max-w-sm p-2 border rounded-2xl  bg-white dark:bg-zinc-950 dark:border-zinc-800">
+              <div className="flex items-center justify-between gap-x-3">
+                <div>
+                  <Button
+                    size="sm"
+                    onClick={togglePlay}
+                    variant="outline"
+                    className="rounded-full w-[35px] h-[35px] flex justify-center items-center"
+                  >
+                    {isPlaying ? <Pause size={12} /> : <Play size={18} />}
+                  </Button>
+                </div>
+                <div className="w-full">
+                  <Progress value={progress} className="h-2  w-100" />
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Button
+                    onClick={() => downloadFile(src)}
+                    size="sm"
+                    variant="secondary"
+                    className="rounded-full w-[35px] h-[35px] flex justify-center items-center"
+                  >
+                    <Download size={12} />
+                  </Button>
+                  {/* </a> */}
+                </div>
+              </div>
 
-            <audio ref={audioRef} src={src} />
+              <audio ref={audioRef} src={src} />
+            </div>
           </div>
-        </div>
-      ))}
+        )
+      )}
     </div>
   )
 }

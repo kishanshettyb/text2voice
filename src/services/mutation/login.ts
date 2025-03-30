@@ -3,6 +3,12 @@ import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import Cookies from 'js-cookie'
 
+// Define LoginCredentials Type
+export type LoginCredentials = {
+  identifier: string
+  password: string
+}
+
 export const useLoginMutation = () => {
   const router = useRouter()
   const LOGIN_URL = process.env.NEXT_PUBLIC_LOGIN_URL
@@ -11,7 +17,7 @@ export const useLoginMutation = () => {
   }
 
   return useMutation({
-    mutationFn: async (loginData) => {
+    mutationFn: async (loginData: LoginCredentials) => {
       const response = await axios.post(LOGIN_URL, loginData, {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -28,7 +34,7 @@ export const useLoginMutation = () => {
       })
     },
     onError: (error) => {
-      console.error(error.response?.data?.error || error.message)
+      console.error(error.message)
     }
   })
 }

@@ -9,7 +9,7 @@ export const useCreateGeneratedVoicesMutation = () => {
       console.log('success')
     },
     onError: (error) => {
-      console.error(error.response?.data?.error || error.message)
+      console.error(error.message)
     }
   })
 }

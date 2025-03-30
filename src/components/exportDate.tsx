@@ -1,7 +1,7 @@
 import React from 'react'
 import { FileUp } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import * as XLSX from 'xlsx/xlsx.mjs'
+import * as XLSX from 'xlsx'
 
 type ExportDataProps<T> = {
   data: T[]

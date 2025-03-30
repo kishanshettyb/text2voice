@@ -6,7 +6,7 @@ import { useState } from 'react'
 import Cookies from 'js-cookie'
 
 export default function MyFilesPage() {
-  const userId = Cookies.get('userId')
+  const userId = Cookies.get('userId') ?? ''
   const [page] = useState(1)
   const { data = [], isLoading, error } = useGetAllUserTextToVoiceData(userId, page)
 
@@ -16,6 +16,7 @@ export default function MyFilesPage() {
   const transformedData = data.map((item) => {
     const voice = item.voices[0] // Assuming there's only one voice per item
     return {
+      id: item.id,
       uid: item.uid,
       voice_name: voice?.voice_name,
       voice_speed: voice?.voice_speed,
@@ -29,8 +30,8 @@ export default function MyFilesPage() {
       <MyFilesDataTable
         columns={columns}
         data={transformedData}
-        exportData={true}
-        exportDataName="MyFiles"
+        // exportData={true}
+        // exportDataName="MyFiles"
       />
     </div>
   )

@@ -33,11 +33,11 @@ function VoiceGenerator() {
   const [textCount, setTextCount] = useState(0)
   const [isOpen, setIsOpen] = useState(false)
   const voiceSpeed = useVoiceStore((state) => state.voiceSpeed) || '1.0x'
-  const [audioUrl, setAudioUrl] = useState<string>('')
+  const [audioUrl, setAudioUrl] = useState<string | undefined>(undefined)
   const [audioText, setAudioText] = useState<string>('')
 
   useEffect(() => {
-    setPageUid(uid)
+    setPageUid(uid as string)
   }, [uid])
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -51,7 +51,7 @@ function VoiceGenerator() {
   const { mutateAsync, isPending, isError, error } = useMutation({
     mutationFn: generateSpeech,
     onSuccess: (data) => {
-      setAudioUrl(data.documentId)
+      setAudioUrl(data.documentId as string)
       setAudioText(data.text)
       const sendData = {
         uid: pageUid,
@@ -60,6 +60,7 @@ function VoiceGenerator() {
         title: fileTitle,
         userId: data.userId
       }
+      console.log(audioText)
       uploadTextToSpeech(sendData)
     }
   })
@@ -176,7 +177,7 @@ function VoiceGenerator() {
         <div className="w-full md:w-1/4 lg:w-1/3 xl:1/5">
           <p className="text-base py-3">History</p>
           <div className="border rounded-xl  dark:bg-zinc-900 dark:border-zinc-700  p-5">
-            <Mp3Player src={audioUrl} title={audioText} />
+            <Mp3Player src={audioUrl ?? ''} />
           </div>
         </div>
       ) : (

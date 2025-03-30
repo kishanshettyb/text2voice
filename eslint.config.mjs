@@ -23,7 +23,7 @@ const eslintConfig = [
     },
     // Custom rules
     rules: {
-      quotes: ['warn', 'double'],
+      // quotes: ['warn', 'double'],
       // semi: ['warn', 'always'],
       'no-unused-vars': [
         'error',
