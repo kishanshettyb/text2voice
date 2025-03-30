@@ -10,7 +10,15 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 })
 
-const client = new textToSpeech.TextToSpeechClient()
+// const client = new textToSpeech.TextToSpeechClient()
+// Parse the Google credentials from the environment variable
+const googleCredentials = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS || '{}') as {
+  [key: string]: unknown
+} // Type the googleCredentials as an object
+
+const client = new textToSpeech.TextToSpeechClient({
+  credentials: googleCredentials
+})
 
 export async function POST(req: Request) {
   try {
