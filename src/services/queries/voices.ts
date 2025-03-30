@@ -33,10 +33,10 @@ export function useGetAllUserTextToVoiceData(userId: string, page: number) {
   return { isLoading, isError, error, data, isFetching }
 }
 
-export function useGetUserVoicesByUid(uid: string, page: string) {
+export function useGetUserVoicesByUid(uid: string) {
   const { isLoading, isError, data, isFetching } = useQuery({
     queryKey: ['userTextToVoiceByUid'],
-    queryFn: () => getUserVoicesByUid(uid, page),
+    queryFn: () => getUserVoicesByUid(uid),
     staleTime: 1000
   })
   return { isLoading, isError, data, isFetching }

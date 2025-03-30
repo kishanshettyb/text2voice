@@ -30,8 +30,8 @@ export default function MyFilesPage() {
       <MyFilesDataTable
         columns={columns}
         data={transformedData}
-        exportData={true}
-        exportDataName="MyFiles"
+        // exportData={true}
+        // exportDataName="MyFiles"
       />
     </div>
   )
