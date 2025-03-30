@@ -34,7 +34,7 @@ export const useLoginMutation = () => {
       })
     },
     onError: (error) => {
-      console.error(error.response?.data?.error || error.message)
+      console.error(error.message)
     }
   })
 }
