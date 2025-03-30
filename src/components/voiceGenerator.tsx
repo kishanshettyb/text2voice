@@ -174,15 +174,13 @@ function VoiceGenerator() {
       </div>
       {audioUrl || edit === 'true' ? (
         <div className="w-full md:w-1/4 lg:w-1/3 xl:1/5">
-          <p className="text-base py-3">Records</p>
+          <p className="text-base py-3">History</p>
           <div className="border rounded-xl  dark:bg-zinc-900 dark:border-zinc-700  p-5">
             <Mp3Player src={audioUrl} title={audioText} />
           </div>
         </div>
       ) : (
-        <>
-          <p>no data</p>
-        </>
+        <></>
       )}
     </div>
   )

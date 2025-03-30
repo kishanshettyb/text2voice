@@ -12,16 +12,23 @@ export default function MyFilesPage() {
 
   if (isLoading) return <p>Loading...</p>
   if (error) return <p>Error: {error.message}</p>
-  const sortedData = [...data].sort((a, b) => {
-    const dateA = new Date(a.createdAt).getTime() || 0
-    const dateB = new Date(b.createdAt).getTime() || 0
-    return dateB - dateA // Sort in descending order (newest first)
+
+  const transformedData = data.map((item) => {
+    const voice = item.voices[0] // Assuming there's only one voice per item
+    return {
+      uid: item.uid,
+      voice_name: voice?.voice_name,
+      voice_speed: voice?.voice_speed,
+      text: voice?.text,
+      character_count: voice?.character_count
+    }
   })
+
   return (
     <div className="container mx-auto p-4 border rounded-2xl">
       <MyFilesDataTable
         columns={columns}
-        data={sortedData}
+        data={transformedData}
         exportData={true}
         exportDataName="MyFiles"
       />

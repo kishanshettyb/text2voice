@@ -27,21 +27,21 @@ const axiosInstance = axios.create({
   }
 })
 
-export const getAllUserTextToVoiceData = async (
-  userId: string
+export const getAllUserTextToVoiceData = async () =>
+  // userId: string
   // page: number
-) => {
-  try {
-    const response = await axiosInstance.get(
-      `voices?filters[users_permissions_user][documentId][$eq]=${userId}`
-    )
-    const data = response.data?.data ?? [] // ✅ Extract 'data' array, or return empty array
-    return Array.isArray(data) ? data : [] // ✅ Ensure it's always an array
-  } catch (error) {
-    console.error('Error fetching user text-to-voice data:', error)
-    return [] // ✅ Return an empty array on error
+  {
+    try {
+      const response = await axiosInstance.get(
+        'text-to-voice-generations?populate=voices.users_permissions_user'
+      )
+      const data = response.data?.data ?? [] // ✅ Extract 'data' array, or return empty array
+      return Array.isArray(data) ? data : [] // ✅ Ensure it's always an array
+    } catch (error) {
+      console.error('Error fetching user text-to-voice data:', error)
+      return [] // ✅ Return an empty array on error
+    }
   }
-}
 
 export const getUserVoicesByUid = async (uid: string) => {
   return await axiosInstance.get(

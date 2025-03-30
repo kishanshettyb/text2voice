@@ -63,7 +63,7 @@ export const columns: ColumnDef<Payment>[] = [
     cell: ({ row }) => (
       <Popover>
         <PopoverTrigger>
-          <div className="w-[200px] p-2 border text-left border-slate-100 bg-slate-50 ">
+          <div className="w-[200px] p-2 border text-left border-slate-100 bg-slate-50 dark:bg-transparent ">
             <p className="line-clamp-1">{row.getValue('text')}</p>
           </div>
         </PopoverTrigger>
@@ -72,17 +72,15 @@ export const columns: ColumnDef<Payment>[] = [
     )
   },
   {
-    accessorKey: 'documentId',
+    accessorKey: 'uid',
     header: 'Action',
     cell: ({ row }) => (
       <div>
-        <Link href={`/studio/text-to-speech/${row.getValue('documentId')}?edit=true`}>
-          <Button asChild variant="outline">
-            <a href={row.getValue('audio_url')} download={row.getValue('audio_url')}>
-              <Edit2 />
-            </a>
-          </Button>
-        </Link>
+        <Button asChild variant="outline">
+          <Link href={`/studio/text-to-speech/${row.getValue('uid')}?edit=true`}>
+            <Edit2 />
+          </Link>
+        </Button>
       </div>
     )
   },
