@@ -55,10 +55,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Failed to generate speech' }, { status: 500 })
     }
 
-    const audioBuffer = Buffer.from(response.audioContent, 'binary')
+    // const audioBuffer = Buffer.from(response.audioContent, 'binary')
+    const audioBuffer = Buffer.from(response.audioContent as Uint8Array)
 
     // Upload to Cloudinary
-    const cloudinaryResponse = await new Promise((resolve, reject) => {
+    const cloudinaryResponse = await new Promise<{ secure_url: string }>((resolve, reject) => {
       cloudinary.uploader
         .upload_stream(
           {
@@ -66,7 +67,7 @@ export async function POST(req: Request) {
             type: 'authenticated',
             folder: 'tts_audio'
           },
-          (error, result) => (error ? reject(error) : resolve(result))
+          (error, result) => (error ? reject(error) : resolve(result as { secure_url: string })) // Ensure correct type
         )
         .end(audioBuffer)
     })
