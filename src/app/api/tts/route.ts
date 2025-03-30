@@ -36,9 +36,8 @@ export async function POST(req: Request) {
 
     const value = speed
     const voiceSpeed = parseFloat(value)
-    // const characterCount = text.length;
-    // const user = userId;
-    console.log(userId)
+    const characterCount = text.length
+    const user = userId
     if (!text) {
       return NextResponse.json({ error: 'Text is required' }, { status: 400 })
     }
@@ -84,38 +83,34 @@ export async function POST(req: Request) {
     console.log(audioUrl)
 
     // // Save TTS record in Strapi
-    // const strapiRes = await fetch(
-    //   `${process.env.NEXT_PUBLIC_BASE_URL}/voices`,
-    //   {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization: `Bearer ${token}`,
-    //     },
-    //     body: JSON.stringify({
-    //       data: {
-    //         users_permissions_user: user,
-    //         text: text,
-    //         character_count: characterCount,
-    //         voice_name: voice,
-    //         voice_speed: speed,
-    //         audio_format: audioFormat,
-    //         audio_url: audioUrl,
-    //       },
-    //     }),
-    //   }
-    // );
+    const strapiRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/voices`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        data: {
+          users_permissions_user: user,
+          text: text,
+          character_count: characterCount,
+          voice_name: voice,
+          voice_speed: speed,
+          audio_format: audioFormat,
+          audio_url: audioUrl
+        }
+      })
+    })
 
-    // if (!strapiRes.ok) {
-    //   throw new Error("Failed to save in Strapi");
-    // }
+    if (!strapiRes.ok) {
+      throw new Error('Failed to save in Strapi')
+    }
 
-    // const strapiData = await strapiRes.json();
-    // const documentId = strapiData?.data.documentId;
-    // const audioText = strapiData?.data.text.slice(0, 30);
+    const strapiData = await strapiRes.json()
+    const documentId = strapiData?.data.documentId
+    const audioText = strapiData?.data.text.slice(0, 30)
 
-    // return NextResponse.json({ documentId, token, audioText });
-    return NextResponse.json({ audioUrl })
+    return NextResponse.json({ documentId, token, audioText })
   } catch (error) {
     console.log(error)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
