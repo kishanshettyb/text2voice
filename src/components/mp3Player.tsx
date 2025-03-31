@@ -14,10 +14,10 @@ const Mp3Player = ({ src }: { src: string }) => {
   const { uid } = useParams()
   const userUid = Array.isArray(uid) ? uid[0] : uid || ''
   const { data: getUserCreatedVoicebypageId } = useGetUserVoicesByUid(userUid)
+
   useEffect(() => {
     const audio = audioRef.current
     if (!audio) return
-
     const updateProgress = () => {
       setProgress((audio.currentTime / audio.duration) * 100)
     }
@@ -114,7 +114,8 @@ const Mp3Player = ({ src }: { src: string }) => {
                 </div>
               </div>
 
-              <audio ref={audioRef} src={src} />
+              {/* <audio ref={audioRef} src={src} /> */}
+              {src ? <audio ref={audioRef} src={src} /> : null}
             </div>
           </div>
         )

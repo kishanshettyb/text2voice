@@ -13,7 +13,7 @@ import { SpeedSelect } from '@/components/speedSelect'
 import useVoiceStore from '@/store/speed'
 import Voicetable from '@/components/voiceTable'
 import CustomModal from '@/components/customModal'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import Mp3Player from './mp3Player'
 import { TitleBar } from '@/components/titleBar'
 import useTitleStore from '@/store/title'
@@ -35,6 +35,7 @@ function VoiceGenerator() {
   const voiceSpeed = useVoiceStore((state) => state.voiceSpeed) || '1.0x'
   const [audioUrl, setAudioUrl] = useState<string | undefined>(undefined)
   const [audioText, setAudioText] = useState<string>('')
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     setPageUid(uid as string)
@@ -61,6 +62,8 @@ function VoiceGenerator() {
         userId: data.userId
       }
       console.log(audioText)
+      queryClient.invalidateQueries({ queryKey: ['userTextToVoiceByUid', pageUid] })
+
       uploadTextToSpeech(sendData)
     }
   })
@@ -118,6 +121,7 @@ function VoiceGenerator() {
                       <FormItem>
                         <FormControl>
                           <Textarea
+                            rows={16}
                             className="dark:border-zinc-600 rounded-lg dark:active:border-zinc-500 dark:focus:border-zinc-500 dark:text-white"
                             placeholder="Type here..."
                             {...field}
@@ -176,7 +180,7 @@ function VoiceGenerator() {
       {audioUrl || edit === 'true' ? (
         <div className="w-full md:w-1/4 lg:w-1/3 xl:1/5">
           <p className="text-base py-3">History</p>
-          <div className="border rounded-xl  dark:bg-zinc-900 dark:border-zinc-700  p-5">
+          <div className="border rounded-xl max-h-[500px] overflow-y-scroll dark:bg-zinc-900 dark:border-zinc-700  p-5">
             <Mp3Player src={audioUrl ?? ''} />
           </div>
         </div>
