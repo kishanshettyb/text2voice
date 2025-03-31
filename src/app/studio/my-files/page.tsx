@@ -27,12 +27,7 @@ export default function MyFilesPage() {
 
   return (
     <div className="container mx-auto p-4 border rounded-2xl">
-      <MyFilesDataTable
-        columns={columns}
-        data={transformedData}
-        // exportData={true}
-        // exportDataName="MyFiles"
-      />
+      <MyFilesDataTable columns={columns} data={transformedData} />
     </div>
   )
 }
