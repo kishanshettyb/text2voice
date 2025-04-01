@@ -37,6 +37,8 @@ export async function POST(req: Request) {
     const value = speed
     const voiceSpeed = parseFloat(value)
     const characterCount = text.length
+    console.log(characterCount)
+
     const user = userId
     if (!text) {
       return NextResponse.json({ error: 'Text is required' }, { status: 400 })

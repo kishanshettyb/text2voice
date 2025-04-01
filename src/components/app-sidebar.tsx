@@ -26,6 +26,8 @@ import {
   SidebarRail
 } from '@/components/ui/sidebar'
 import { NavOverview } from './nav-overview'
+import { Button } from './ui/button'
+import Link from 'next/link'
 
 // This is sample data.
 const data = {
@@ -105,9 +107,28 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={data.navMain} />
         <NavAccounts account={data.account} />
       </SidebarContent>
+      <div className="p-4">
+        <div className="shadow-2xl border border-green-400 shadow-green-300 dark:shadow-green-900 rounded-2xl bg-gradient-to-r from-green-400 from-10% via-green-600 via-30% to-green-400 to-90% ">
+          <div className="px-4 pt-4 border border-b-green-400 border-x-0 border-t-0">
+            <p className="text-sm mb-0 text-white font-normal">Pro Plan</p>
+            <p className="text-xl  text-white font-semibold">Flat 50% off</p>
+            <p className="text-xs text-white mb-2">for annual subscription</p>
+          </div>
+          <div className="px-4 pt-2 pb-4">
+            <p className="text-center text-xs mb-2 text-white">6,716 characters left</p>
+
+            <Link href="/studio/pricing">
+              <Button variant="default" size="lg" className="w-full opacity-90 hover:opacity-100">
+                <Sparkles /> Upgrade Now
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
       <SidebarFooter>
         <NavUser user={data.user} />
       </SidebarFooter>
+
       <SidebarRail />
     </Sidebar>
   )

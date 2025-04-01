@@ -27,12 +27,11 @@ const axiosInstance = axios.create({
   }
 })
 
-export const getAllUserTextToVoiceData = async (userId: string, page: number) => {
+export const getAllUserTextToVoiceData = async (userId: string) => {
   try {
     const response = await axiosInstance.get(
-      `text-to-voice-generations?populate=voices.users_permissions_user&filters[users_permissions_user][documentId]=${userId}&sort=createdAt:desc`
+      `text-to-voice-generations?populate=voices.users_permissions_user.subscription&filters[users_permissions_user][documentId]=${userId}&sort=createdAt:desc`
     )
-    console.log(userId, page)
     const data = response.data?.data ?? [] // ✅ Extract 'data' array, or return empty array
     return Array.isArray(data) ? data : [] // ✅ Ensure it's always an array
   } catch (error) {
