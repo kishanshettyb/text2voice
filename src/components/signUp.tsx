@@ -29,9 +29,13 @@ export type LoginCredentials = {
 }
 
 export type subscriptionTypes = {
-  users_permissions_user: string
-  subscriprion_status: string
-  plan: string
+  data: {
+    users_permissions_user: string
+    subscriprion_status: string
+    plan: string
+    start_date: Date
+    end_date: Date
+  }
 }
 
 const formSchema = z.object({
