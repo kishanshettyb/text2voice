@@ -10,15 +10,15 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 })
 
-// const client = new textToSpeech.TextToSpeechClient()
+const client = new textToSpeech.TextToSpeechClient()
 // Parse the Google credentials from the environment variable
-const googleCredentials = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS || '{}') as {
-  [key: string]: unknown
-} // Type the googleCredentials as an object
+// const googleCredentials = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS || '{}') as {
+//   [key: string]: unknown
+// } // Type the googleCredentials as an object
 
-const client = new textToSpeech.TextToSpeechClient({
-  credentials: googleCredentials
-})
+// const client = new textToSpeech.TextToSpeechClient({
+//   credentials: googleCredentials
+// })
 
 export async function POST(req: Request) {
   try {
@@ -83,6 +83,7 @@ export async function POST(req: Request) {
 
     const audioUrl = cloudinaryResponse.secure_url
     console.log(audioUrl)
+    console.log(token)
 
     // // Save TTS record in Strapi
     const strapiRes = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/voices`, {
