@@ -9,8 +9,13 @@ export type LoginCredentials = {
   password: string
 }
 
+export type SignUpCredentials = {
+  email: string
+  username: string
+  password: string
+}
+
 export const useLoginMutation = () => {
-  const router = useRouter()
   const LOGIN_URL = process.env.NEXT_PUBLIC_LOGIN_URL
   if (!LOGIN_URL) {
     throw new Error('LOGIN_URL is not defined in the environment variables.')
@@ -19,6 +24,29 @@ export const useLoginMutation = () => {
   return useMutation({
     mutationFn: async (loginData: LoginCredentials) => {
       const response = await axios.post(LOGIN_URL, loginData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      return response
+    },
+    onSuccess: async () => {},
+    onError: (error) => {
+      console.error(error.message)
+    }
+  })
+}
+
+export const useSignUpMutation = () => {
+  const router = useRouter()
+  const LOGIN_URL = process.env.NEXT_PUBLIC_LOGIN_URL
+  if (!LOGIN_URL) {
+    throw new Error('LOGIN_URL is not defined in the environment variables.')
+  }
+
+  return useMutation({
+    mutationFn: async (loginData: SignUpCredentials) => {
+      const response = await axios.post(`${LOGIN_URL}/register`, loginData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

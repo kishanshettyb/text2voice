@@ -1,16 +1,20 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
 export function middleware(req: NextRequest) {
-  const token = req.cookies.get('token') // Use server-side cookie access
-  const isAuthRoute = req.nextUrl.pathname.startsWith('/studio')
+  const token = req.cookies.get('token')?.value || ''
 
-  if (!token && isAuthRoute) {
+  console.log('Token:', token) // Debugging
+
+  // If accessing /studio without a token, redirect to /auth
+  if (req.nextUrl.pathname.startsWith('/studio') && !token) {
     return NextResponse.redirect(new URL('/auth', req.url))
   }
 
   return NextResponse.next()
 }
 
+// Apply middleware to all /studio routes
 export const config = {
-  matcher: ['/studio/:path*'] // Protect all studio routes
+  matcher: ['/studio', '/studio/:path*'] // Ensures /studio and all its subpaths are protected
 }
