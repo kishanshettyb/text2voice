@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button'
 import React from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { CheckCheck } from 'lucide-react'
+import Link from 'next/link'
 
 function Page() {
   return (
@@ -53,9 +54,11 @@ function Page() {
               </p>
               <p className="text-xs opacity-50 mt-1">USD $29.00 billed monthly</p>
               <p className="font-semibold mt-5 text-sm">25,000 characters per month</p>
-              <Button className="w-full my-5" variant="default" size="lg">
-                Get Plan Now
-              </Button>
+              <Link href="https://buy.stripe.com/test_cN27up5GGdQm6xWbII?prefill_email=kishanqr@gmail.com">
+                <Button className="w-full my-5" variant="default" size="lg">
+                  Get Plan Now
+                </Button>
+              </Link>
               <ul>
                 <li className="text-sm flex py-1 gap-x-2">
                   <CheckCheck className="text-green-500" size={20} />
