@@ -3,7 +3,6 @@ import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import Cookies from 'js-cookie'
 
-// Define LoginCredentials Type
 export type LoginCredentials = {
   identifier: string
   password: string
@@ -16,6 +15,7 @@ export type SignUpCredentials = {
 }
 
 export const useLoginMutation = () => {
+  const router = useRouter()
   const LOGIN_URL = process.env.NEXT_PUBLIC_LOGIN_URL
   if (!LOGIN_URL) {
     throw new Error('LOGIN_URL is not defined in the environment variables.')
@@ -30,7 +30,14 @@ export const useLoginMutation = () => {
       })
       return response
     },
-    onSuccess: async () => {},
+    onSuccess: async (data) => {
+      router.push('/studio')
+      Cookies.set('token', data?.data.jwt, { expires: 1, path: '/' })
+      Cookies.set('userId', data?.data.user.documentId, {
+        expires: 1,
+        path: '/'
+      })
+    },
     onError: (error) => {
       console.error(error.message)
     }
@@ -38,7 +45,6 @@ export const useLoginMutation = () => {
 }
 
 export const useSignUpMutation = () => {
-  const router = useRouter()
   const LOGIN_URL = process.env.NEXT_PUBLIC_LOGIN_URL
   if (!LOGIN_URL) {
     throw new Error('LOGIN_URL is not defined in the environment variables.')
@@ -53,14 +59,7 @@ export const useSignUpMutation = () => {
       })
       return response
     },
-    onSuccess: async (data) => {
-      router.push('/studio')
-      Cookies.set('token', data?.data.jwt, { expires: 1, path: '/' })
-      Cookies.set('userId', data?.data.user.documentId, {
-        expires: 1,
-        path: '/'
-      })
-    },
+    onSuccess: async () => {},
     onError: (error) => {
       console.error(error.message)
     }

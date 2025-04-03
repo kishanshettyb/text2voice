@@ -31,7 +31,7 @@ export type LoginCredentials = {
 export type subscriptionTypes = {
   data: {
     users_permissions_user: string
-    subscriprion_status: string
+    subscription_status: string
     plan: string
     start_date: Date
     end_date: Date
@@ -84,9 +84,13 @@ export function SignUpForm() {
     }
     mutation.mutate(loginData, {
       onSuccess: (data) => {
+        const planId = process.env.NEXT_PUBLIC_FREE_PLAN_ID
+        if (!planId) {
+          throw new Error('NEXT_PUBLIC_FREE_PLAN_ID is not set in the environment variables')
+        }
         const subscriptionData: subscriptionTypes = {
           data: {
-            plan: process.env.NEXT_PUBLIC_FREE_PLAN_ID,
+            plan: planId,
             subscription_status: 'active',
             users_permissions_user: data?.data?.user.documentId,
             start_date: startDate,

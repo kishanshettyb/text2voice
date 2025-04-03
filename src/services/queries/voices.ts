@@ -24,10 +24,10 @@ export function useGetAllLanguages() {
   })
 }
 
-export function useGetAllUserTextToVoiceData(userId: string, page: number) {
+export function useGetAllUserTextToVoiceData(userId: string) {
   const { isLoading, isError, error, data, isFetching } = useQuery({
     queryKey: ['userTextToVoice'],
-    queryFn: () => getAllUserTextToVoiceData(userId, page),
+    queryFn: () => getAllUserTextToVoiceData(userId),
     staleTime: 1000
   })
   return { isLoading, isError, error, data, isFetching }

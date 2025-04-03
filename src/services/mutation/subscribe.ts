@@ -5,11 +5,13 @@ import Cookies from 'js-cookie'
 
 // Define LoginCredentials Type
 export type LoginCredentials = {
-  plan: string
-  users_permissions_user: string
-  subscription_status: string
-  start_date: Date
-  end_date: Date
+  data: {
+    plan: string
+    users_permissions_user: string
+    subscription_status: string
+    start_date: Date
+    end_date: Date
+  }
 }
 
 export const useCreateFreeSubscribeMutation = () => {
