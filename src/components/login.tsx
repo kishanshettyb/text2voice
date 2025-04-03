@@ -75,7 +75,7 @@ export function LoginForm() {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="space-y-4 relative">
+              <div className="relative space-y-4">
                 <FormField
                   control={form.control}
                   name="identifier"
@@ -94,9 +94,9 @@ export function LoginForm() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <div className="flex justify-between items-center">
+                      <div className="flex items-center justify-between">
                         <FormLabel>Password</FormLabel>
-                        <Link href="#" className="opacity-50 hover:opacity-100 text-sm">
+                        <Link href="#" className="text-sm opacity-50 hover:opacity-100">
                           Forgot Password?
                         </Link>
                       </div>
@@ -142,10 +142,10 @@ export function LoginForm() {
             </form>
           </Form>
 
-          <div className="text-center flex items-center justify-evenly w-full my-4">
-            <div className="border w-full border-b border-gray-300"></div>
-            <p className="text-zinc-600 text-sm mx-4">or</p>
-            <div className="border w-full border-b border-gray-300"></div>
+          <div className="flex items-center w-full my-4 text-center justify-evenly">
+            <div className="w-full border border-b border-gray-300"></div>
+            <p className="mx-4 text-sm text-zinc-600">or</p>
+            <div className="w-full border border-b border-gray-300"></div>
           </div>
 
           <Button className="w-full" variant="outline" size="lg">
@@ -155,7 +155,7 @@ export function LoginForm() {
 
           <p className="mt-5 text-sm text-center text-zinc-600">
             Don&apos;t have an Account?{' '}
-            <Link className="text-blue-500 font-semibold" href="#">
+            <Link className="font-semibold text-blue-500" href="/signup">
               Signup Now
             </Link>
           </p>

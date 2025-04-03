@@ -89,7 +89,6 @@ export function SignUpForm() {
             end_date: endDate
           }
         }
-        console.log(subscriptionData)
 
         setIsLoading(false)
         subscriptionMutation.mutate(subscriptionData, {
@@ -117,7 +116,7 @@ export function SignUpForm() {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="space-y-4 relative">
+              <div className="relative space-y-4">
                 <FormField
                   control={form.control}
                   name="username"
@@ -149,9 +148,9 @@ export function SignUpForm() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <div className="flex justify-between items-center">
+                      <div className="flex items-center justify-between">
                         <FormLabel>Password</FormLabel>
-                        <Link href="#" className="opacity-50 hover:opacity-100 text-sm">
+                        <Link href="#" className="text-sm opacity-50 hover:opacity-100">
                           Forgot Password?
                         </Link>
                       </div>
@@ -190,28 +189,28 @@ export function SignUpForm() {
                       <LoaderCircle size={18} className="animate-spin" /> Loading...
                     </>
                   ) : (
-                    'Signin'
+                    'Signup'
                   )}
                 </Button>
               </div>
             </form>
           </Form>
 
-          <div className="text-center flex items-center justify-evenly w-full my-4">
-            <div className="border w-full border-b border-gray-300"></div>
-            <p className="text-zinc-600 text-sm mx-4">or</p>
-            <div className="border w-full border-b border-gray-300"></div>
+          <div className="flex items-center w-full my-4 text-center justify-evenly">
+            <div className="w-full border border-b border-gray-300"></div>
+            <p className="mx-4 text-sm text-zinc-600">or</p>
+            <div className="w-full border border-b border-gray-300"></div>
           </div>
 
           <Button className="w-full" variant="outline" size="lg">
             <Image alt="Google Login" width="20" height="20" src="/google.png" />
-            Login with Google
+            Signup with Google
           </Button>
 
           <p className="mt-5 text-sm text-center text-zinc-600">
-            Don&apos;t have an Account?{' '}
-            <Link className="text-blue-500 font-semibold" href="#">
-              Signup Now
+            Do you have an Account?{' '}
+            <Link className="font-semibold text-blue-500" href="/auth">
+              Login
             </Link>
           </p>
         </CardContent>
