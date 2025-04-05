@@ -46,6 +46,8 @@ export const useLoginMutation = () => {
 
 export const useSignUpMutation = () => {
   const LOGIN_URL = process.env.NEXT_PUBLIC_LOGIN_URL
+  const router = useRouter()
+
   if (!LOGIN_URL) {
     throw new Error('LOGIN_URL is not defined in the environment variables.')
   }
@@ -59,7 +61,14 @@ export const useSignUpMutation = () => {
       })
       return response
     },
-    onSuccess: async () => {},
+    onSuccess: async (data) => {
+      router.push('/studio')
+      Cookies.set('token', data?.data.jwt, { expires: 1, path: '/' })
+      Cookies.set('userId', data?.data.user.documentId, {
+        expires: 1,
+        path: '/'
+      })
+    },
     onError: (error) => {
       console.error(error.message)
     }

@@ -18,6 +18,7 @@ export async function POST(req) {
       // Store in your database (e.g., PostgreSQL, MySQL, etc.)
       // await savePaymentToDatabase(paymentIntent)
       console.log(JSON.stringify(paymentIntent))
+      console.log('success')
     }
 
     return NextResponse.json({ received: true })
