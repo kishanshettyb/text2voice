@@ -20,16 +20,18 @@ export async function POST(request) {
   if (event.type === 'checkout.session.completed') {
     console.log('Received event:', event)
     const customerId = event.data.object.customer
-
-    // Retrieve customer details
     const customer = await stripe.customers.retrieve(customerId)
-
-    // Get the customer's email
     const customerEmail = customer.email
+    // Retrieve subscription details
+    const subscriptionId = event.data.object.subscription // Subscription ID from the session
+    const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
+      expand: ['items.data.price.product']
+    })
 
-    console.log('Customer Email:', customerEmail)
+    // Get subscribed product IDs
+    const productIds = subscription.items.data.map((item) => item.price.product)
 
-    // Example: Store payment data
+    console.log('Subscribed Product IDs:', productIds)
     const paymentData = {
       data: {
         customer_email: customerEmail,
@@ -40,8 +42,14 @@ export async function POST(request) {
         payment_status: event.data.object.payment_status
       }
     }
-    // Save paymentData to your database
-    await savePaymentDataToDatabase(paymentData)
+    const paymentResponse = await savePaymentDataToDatabase(paymentData)
+    console.log(paymentResponse)
+
+    // Update subscription table
+    if (event.data.object.payment_status === 'paid') {
+      const stripe_subscription_id = event.data.object.id
+      await updateSubscriptionTable(customerEmail, stripe_subscription_id, productIds)
+    }
   }
 
   return new Response('Webhook received', { status: 200 })
@@ -56,8 +64,63 @@ async function savePaymentDataToDatabase(data) {
         'Content-Type': 'application/json'
       }
     })
-    console.log('Payment data saved:', response.data)
+    return response.data
   } catch (error) {
     console.error('Error saving payment data:', error)
+  }
+}
+
+async function updateSubscriptionTable(customerEmail, stripe_subscription_id, productIds) {
+  const token = process.env.NEXT_PUBLIC_STRAPI_ADMIN_TOKEN
+
+  try {
+    // Retrieve user ID by email
+    const userResponse = await axios.get(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/users?filters[email][$eq]=${customerEmail}&populate=subscription`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+
+    const user = userResponse.data[0] // Assuming only one match
+    if (!user) {
+      console.error('No user found with the provided email.')
+      return
+    }
+    let updatedPlan
+    if (
+      productIds.some(
+        (product) => product.id === process.env.NEXT_PUBLIC_CREATOR_MONTHLY_PRODUCT_ID
+      )
+    ) {
+      updatedPlan = process.env.NEXT_PUBLIC_CREATOR_MONTHLY_PLAN_ID
+    }
+    // Update subscription table
+    const subscriptionUpdateData = {
+      data: {
+        subscription_status: 'active',
+        stripe_subscription_id: stripe_subscription_id,
+        plan: updatedPlan
+      }
+    }
+    console.log(subscriptionUpdateData)
+    console.log(user.email, user.subscription)
+
+    const subscriptionResponse = await axios.put(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/subscriptions/${user.subscription.documentId}`,
+      subscriptionUpdateData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    )
+
+    console.log('Subscription updated successfully:', subscriptionResponse.data)
+  } catch (error) {
+    console.error('Error updating subscription:', error)
   }
 }
