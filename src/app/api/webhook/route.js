@@ -40,8 +40,16 @@ export async function POST(request) {
         payment_status: event.data.object.payment_status
       }
     }
+
     // Save paymentData to your database
-    await savePaymentDataToDatabase(paymentData)
+    const paymentResponse = await savePaymentDataToDatabase(paymentData)
+    console.log(paymentResponse)
+
+    // Update subscription table
+    if (event.data.object.payment_status === 'paid') {
+      const stripe_subscription_id = event.data.object.id
+      await updateSubscriptionTable(customerEmail, stripe_subscription_id)
+    }
   }
 
   return new Response('Webhook received', { status: 200 })
@@ -57,7 +65,55 @@ async function savePaymentDataToDatabase(data) {
       }
     })
     console.log('Payment data saved:', response.data)
+    return response.data
   } catch (error) {
     console.error('Error saving payment data:', error)
+  }
+}
+
+async function updateSubscriptionTable(customerEmail, stripe_subscription_id) {
+  const token = process.env.NEXT_PUBLIC_STRAPI_ADMIN_TOKEN
+
+  try {
+    // Retrieve user ID by email
+    const userResponse = await axios.get(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/users?filters[email][$eq]=${customerEmail}&populate=subscription`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+
+    const user = userResponse.data[0] // Assuming only one match
+    if (!user) {
+      console.error('No user found with the provided email.')
+      return
+    }
+
+    // Update subscription table
+    const subscriptionUpdateData = {
+      data: {
+        subscription_status: 'active',
+        stripe_subscription_id: stripe_subscription_id // Example field to update
+      }
+    }
+    console.log(subscriptionUpdateData)
+    console.log(user.email, user.subscription)
+
+    const subscriptionResponse = await axios.put(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/subscriptions/${user.subscription.documentId}`,
+      subscriptionUpdateData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    )
+
+    console.log('Subscription updated successfully:', subscriptionResponse.data)
+  } catch (error) {
+    console.error('Error updating subscription:', error)
   }
 }
