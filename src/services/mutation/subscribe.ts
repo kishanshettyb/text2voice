@@ -20,6 +20,7 @@ export const useCreateFreeSubscribeMutation = () => {
   return useMutation({
     mutationFn: async (loginData: LoginCredentials) => {
       const token = Cookies.get('token')
+      console.log('token==' + token)
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BASE_URL}/subscriptions`,
         loginData,
