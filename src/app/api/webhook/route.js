@@ -1,16 +1,12 @@
-// src/app/api/webhook/route.js
-
+import axios from 'axios'
 import Stripe from 'stripe'
-// import { NextRequest } from 'next/server'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
 export async function POST(request) {
   const body = await request.text()
   const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET
-
   const sig = request.headers.get('stripe-signature')
-
   let event
 
   try {
@@ -20,17 +16,21 @@ export async function POST(request) {
     return new Response(`Webhook Error: ${err.message}`, { status: 400 })
   }
 
-  // Process the event here
-  console.log('Received event:', event)
+  // console.log('Received event:', event)
 
   // Store data in payments
   if (event.type === 'checkout.session.completed') {
     // Example: Store payment data
     const paymentData = {
-      paymentIntent: event.data.object.payment_intent,
-      amount: event.data.object.amount_total
+      data: {
+        users_permissions_user: 'j7rc37cau539l6zk5zlz6pq9',
+        checkout_session_id: event.data.object.id,
+        customer_id: event.data.object.customer,
+        amount: event.data.object.amount_total,
+        currency: event.data.object.currency,
+        payment_status: event.data.object.payment_status
+      }
     }
-
     // Save paymentData to your database
     await savePaymentDataToDatabase(paymentData)
   }
@@ -39,6 +39,16 @@ export async function POST(request) {
 }
 
 async function savePaymentDataToDatabase(data) {
-  // Implement logic to save data to your database here
-  console.log(JSON.stringify(data))
+  const token = process.env.NEXT_PUBLIC_STRAPI_ADMIN_TOKEN
+  try {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/payments`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+    console.log('Payment data saved:', response.data)
+  } catch (error) {
+    console.error('Error saving payment data:', error)
+  }
 }
