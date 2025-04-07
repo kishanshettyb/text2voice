@@ -16,14 +16,23 @@ export async function POST(request) {
     return new Response(`Webhook Error: ${err.message}`, { status: 400 })
   }
 
-  // console.log('Received event:', event)
-
   // Store data in payments
   if (event.type === 'checkout.session.completed') {
+    console.log('Received event:', event)
+    const customerId = event.data.object.customer
+
+    // Retrieve customer details
+    const customer = await stripe.customers.retrieve(customerId)
+
+    // Get the customer's email
+    const customerEmail = customer.email
+
+    console.log('Customer Email:', customerEmail)
+
     // Example: Store payment data
     const paymentData = {
       data: {
-        users_permissions_user: 'j7rc37cau539l6zk5zlz6pq9',
+        customer_email: customerEmail,
         checkout_session_id: event.data.object.id,
         customer_id: event.data.object.customer,
         amount: event.data.object.amount_total,

@@ -54,7 +54,7 @@ function Page() {
               </p>
               <p className="text-xs opacity-50 mt-1">USD $29.00 billed monthly</p>
               <p className="font-semibold mt-5 text-sm">25,000 characters per month</p>
-              <Link href="https://buy.stripe.com/test_cN27up5GGdQm6xWbII?prefill_email=kishanqr@gmail.com">
+              <Link href="https://buy.stripe.com/test_cN27up5GGdQm6xWbII?prefilled_email=kishanqr@gmail.com">
                 <Button className="w-full my-5" variant="default" size="lg">
                   Get Plan Now
                 </Button>
