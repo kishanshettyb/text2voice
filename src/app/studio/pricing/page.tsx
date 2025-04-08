@@ -243,7 +243,7 @@ function Page() {
                 </Button>
               ) : (
                 <Link
-                  href={`https://buy.stripe.com/test_14keWR3yy9A65tSeUV?prefilled_email=${email}`}
+                  href={`https://buy.stripe.com/test_5kA6ql1qq27EaOceUW?prefilled_email=${email}`}
                   passHref
                 >
                   <Button className="w-full my-5" variant="default" size="lg">
@@ -286,7 +286,7 @@ function Page() {
                 </Button>
               ) : (
                 <Link
-                  href={`https://buy.stripe.com/test_14keWR3yy9A65tSeUV?prefilled_email=${email}`}
+                  href={`https://buy.stripe.com/test_14kbKF2uu6nU2hG003?prefilled_email=${email}`}
                   passHref
                 >
                   <Button className="w-full my-5" variant="default" size="lg">
