@@ -9,8 +9,7 @@ import { useGetUserDetails } from '@/services/queries/user'
 function Page() {
   const [tab, setTab] = useState('monthly')
   const userDetails = useGetUserDetails()
-  // const plan = userDetails?.data?.data?.subscription?.plan?.plan_name
-  const plan = 'creator_yearly'
+  const plan = userDetails?.data?.data?.subscription?.plan?.plan_name
   useEffect(() => {
     if (plan?.includes('yearly')) {
       setTab('annual')
