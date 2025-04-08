@@ -1,10 +1,16 @@
+'use client'
 import { Button } from '@/components/ui/button'
 import React from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { CheckCheck } from 'lucide-react'
 import Link from 'next/link'
+import { useGetUserDetails } from '@/services/queries/user'
 
 function Page() {
+  const userDetails = useGetUserDetails()
+  const plan = userDetails?.data?.data?.subscription?.plan?.plan_name
+  const email = userDetails?.data?.data?.email
+
   return (
     <div className="container mx-auto p-4">
       <Tabs defaultValue="monthly" className="w-full">
@@ -18,16 +24,25 @@ function Page() {
         </TabsList>
         <TabsContent value="monthly" className="mt-5">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-            <div className="w-full border p-4 rounded-2xl opacity-60">
+            <div
+              className={`w-full border p-4 rounded-2xl ${plan === 'free' ? `opacity-40` : `opacity-100`}`}
+            >
               <p className="text-xl mb-4   font-semibold">Free</p>
               <p className="text-3xl font-bold">
                 $0<span className="text-sm">/month</span>
               </p>
               <p className="text-xs opacity-50 mt-1">USD $.00 billed monthly</p>
               <p className="font-semibold mt-5 text-sm">1,000 characters per month</p>
-              <Button className="w-full my-5" disabled variant="secondary" size="lg">
-                your current plan
-              </Button>
+              {plan === 'free' ? (
+                <Button className="w-full my-5" variant="secondary" size="lg">
+                  your current plan
+                </Button>
+              ) : (
+                <Button className="w-full my-5" variant="default" size="lg">
+                  Get Plan Now
+                </Button>
+              )}
+
               <ul>
                 <li className="text-sm flex py-1 gap-x-2">
                   <CheckCheck className="text-green-500" size={20} />
@@ -47,18 +62,29 @@ function Page() {
                 </li>
               </ul>
             </div>
-            <div className="w-full border p-4 rounded-2xl">
+            <div
+              className={`w-full border p-4 rounded-2xl ${plan === 'creator_monthly' ? `opacity-40` : `opacity-100`}`}
+            >
               <p className="text-xl mb-4   font-semibold">Creator</p>
               <p className="text-3xl font-bold">
                 $29<span className="text-sm">/month</span>
               </p>
               <p className="text-xs opacity-50 mt-1">USD $29.00 billed monthly</p>
               <p className="font-semibold mt-5 text-sm">25,000 characters per month</p>
-              <Link href="https://buy.stripe.com/test_cN27up5GGdQm6xWbII?prefilled_email=kishanqr@gmail.com">
-                <Button className="w-full my-5" variant="default" size="lg">
-                  Get Plan Now
+              {plan === 'creator_monthly' ? (
+                <Button className="w-full my-5" variant="default" size="lg" disabled>
+                  Your current plan
                 </Button>
-              </Link>
+              ) : (
+                <Link
+                  href={`https://buy.stripe.com/test_cN27up5GGdQm6xWbII?prefilled_email=${email}`}
+                  passHref
+                >
+                  <Button className="w-full my-5" variant="default" size="lg">
+                    Get Plan Now
+                  </Button>
+                </Link>
+              )}
               <ul>
                 <li className="text-sm flex py-1 gap-x-2">
                   <CheckCheck className="text-green-500" size={20} />
@@ -78,16 +104,30 @@ function Page() {
                 </li>
               </ul>
             </div>
-            <div className="w-full border  border-green-600 p-4 rounded-2xl bg-green-200 dark:bg-green-600 shadow-2xl shadow-green-100 dark:shadow-green-900">
+            <div
+              className={`w-full border ${plan === 'unlimited_monthly' ? `opacity-40` : `opacity-100`}   border-green-600 p-4 rounded-2xl bg-green-200 dark:bg-green-600 shadow-2xl shadow-green-100 dark:shadow-green-900`}
+            >
               <p className="text-xl mb-4   font-semibold">Unlimited</p>
               <p className="text-3xl font-bold">
                 $99<span className="text-sm">/month</span>
               </p>
               <p className="text-xs opacity-50 mt-1">USD $99.00 billed monthly</p>
               <p className="font-semibold mt-5 text-sm">Unlimited characters per month</p>
-              <Button className="w-full my-5" variant="default" size="lg">
-                Get Plan Now
-              </Button>
+              {plan === 'creator_monthly' ? (
+                <Button className="w-full my-5" variant="default" size="lg">
+                  Get Plan Now
+                </Button>
+              ) : (
+                <Link
+                  href={`https://buy.stripe.com/test_14keWR3yy9A65tSeUV?prefilled_email=${email}`}
+                  passHref
+                >
+                  <Button className="w-full my-5" variant="default" size="lg">
+                    Get Plan Now
+                  </Button>
+                </Link>
+              )}
+
               <ul>
                 <li className="text-sm flex py-1 gap-x-2">
                   <CheckCheck className="text-green-500" size={20} />
@@ -138,16 +178,24 @@ function Page() {
         </TabsContent>
         <TabsContent value="annual" className="mt-5">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-            <div className="w-full border p-4 rounded-2xl opacity-60">
+            <div
+              className={`w-full border p-4 rounded-2xl ${plan === 'free' ? `opacity-40` : `opacity-100`}`}
+            >
               <p className="text-xl mb-4   font-semibold">Free</p>
               <p className="text-3xl font-bold">
                 $0<span className="text-sm">/month</span>
               </p>
               <p className="text-xs opacity-50 mt-1">USD $.00 billed monthly</p>
               <p className="font-semibold mt-5 text-sm">1,000 characters per month</p>
-              <Button className="w-full my-5" disabled variant="secondary" size="lg">
-                your current plan
-              </Button>
+              {plan === 'free' ? (
+                <Button className="w-full my-5" variant="secondary" size="lg">
+                  your current plan
+                </Button>
+              ) : (
+                <Button className="w-full my-5" variant="default" size="lg">
+                  Get Plan Now
+                </Button>
+              )}
               <ul>
                 <li className="text-sm flex py-1 gap-x-2">
                   <CheckCheck className="text-green-500" size={20} />
