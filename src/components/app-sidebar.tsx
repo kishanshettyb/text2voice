@@ -15,7 +15,6 @@ import {
 } from 'lucide-react'
 
 import { NavMain } from '@/components/nav-main'
-import { NavAccounts } from '@/components/nav-accounts'
 import { NavUser } from '@/components/nav-user'
 import { TeamSwitcher } from '@/components/team-switcher'
 import {
@@ -28,6 +27,7 @@ import {
 import { NavOverview } from './nav-overview'
 import { Button } from './ui/button'
 import Link from 'next/link'
+import { useGetUserDetails } from '@/services/queries/user'
 
 // This is sample data.
 const data = {
@@ -96,7 +96,25 @@ const data = {
   ]
 }
 
+interface User {
+  username: string
+  email: string
+  name: string
+  avatar: string
+}
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const userDetails = useGetUserDetails()
+  const userData = userDetails?.data?.data
+  console.log(JSON.stringify(userDetails?.data?.data))
+  let extractedUserData: User | null = null
+  if (userData) {
+    extractedUserData = {
+      email: userData.email,
+      username: userData.username,
+      name: userData.username,
+      avatar: '/next.svg'
+    }
+  }
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -105,7 +123,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavOverview items={data.navOverview} />
         <NavMain items={data.navMain} />
-        <NavAccounts account={data.account} />
       </SidebarContent>
       <div className="p-4">
         <div className="shadow-2xl border border-green-400 shadow-green-300 dark:shadow-green-900 rounded-2xl bg-gradient-to-r from-green-400 from-10% via-green-600 via-30% to-green-400 to-90% ">
@@ -126,7 +143,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </div>
       </div>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={extractedUserData as User} />
       </SidebarFooter>
 
       <SidebarRail />

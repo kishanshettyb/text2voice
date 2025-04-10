@@ -21,7 +21,7 @@ export function NavAccounts({
 }) {
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>Account</SidebarGroupLabel>
+      <SidebarGroupLabel>Account!</SidebarGroupLabel>
       <SidebarMenu>
         {account.map((item) => (
           <SidebarMenuItem key={item.name}>
