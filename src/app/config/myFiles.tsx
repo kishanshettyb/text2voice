@@ -149,11 +149,43 @@ export const columns: ColumnDef<DataItem>[] = [
     header: 'Download',
     cell: (info) => {
       const voices = info.row.original.voices
+      const voicefile = info.row.original.voices[0].audio_url
+      const downloadFile = (src: string) => {
+        const getFileNameFromUrl = (url: string): string => {
+          const parsedUrl = new URL(url) // Parse the URL
+          const pathSegments = parsedUrl.pathname.split('/') // Split the path by "/"
+          return pathSegments[pathSegments.length - 1] // Get the last segment (the file name)
+        }
+
+        // Fetch the file
+        fetch(src)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error('Failed to fetch the file')
+            }
+            return response.blob() // Convert response to blob
+          })
+          .then((blob) => {
+            // Create an object URL for the blob
+            const fileURL = window.URL.createObjectURL(blob)
+
+            // Create a link element and trigger the download
+            const alink = document.createElement('a')
+            alink.href = fileURL
+            alink.download = getFileNameFromUrl(src) // Set the file name from URL
+            alink.click() // Trigger the download
+
+            // Clean up the object URL after download
+            window.URL.revokeObjectURL(fileURL)
+          })
+          .catch((error) => {
+            console.error('Download failed:', error)
+          })
+      }
+
       return voices && voices.length > 0 ? (
-        <Button variant="outline">
-          <Link download={`${voices[0].audio_url}`} href={`${voices[0].audio_url}`}>
-            <Download />
-          </Link>
+        <Button onClick={() => downloadFile(voicefile)} variant="outline">
+          <Download />
         </Button>
       ) : (
         'N/A'

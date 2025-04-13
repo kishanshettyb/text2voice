@@ -73,7 +73,7 @@ const Mp3Player = ({ src }: { src: string }) => {
 
   return (
     <div>
-      {getUserCreatedVoicebypageId?.data?.data.map(
+      {getUserCreatedVoicebypageId?.data?.data?.map(
         (item: { id: string; title: string; createdAt: string }) => (
           <div key={item.id} className="mb-5">
             <div className="flex flex-1 pb-2 justify-between items-center">
