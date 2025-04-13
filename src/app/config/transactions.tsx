@@ -4,16 +4,14 @@ import { ColumnDef } from '@tanstack/react-table'
 import moment from 'moment'
 import { DataTableColumnHeader } from '@/components/DataTableColumnHeader'
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
 export type Transactions = {
-  id: string
   createdAt: Date
   amount: number
   currency: string
+  payment_status: string
 }
 
-export const columns: ColumnDef<Transactions>[] = [
+export const transactioncolumns: ColumnDef<Transactions>[] = [
   {
     accessorKey: 'createdAt',
     header: ({ column }) => <DataTableColumnHeader column={column} title="Created Date" />,
