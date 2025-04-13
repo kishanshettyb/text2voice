@@ -6,27 +6,12 @@ import Cookies from 'js-cookie'
 
 export default function MyFilesPage() {
   const userId = Cookies.get('userId') ?? ''
-  // const [page] = useState(1)
-  const { data = [], isLoading, error } = useGetAllUserTextToVoiceData(userId)
-
-  if (isLoading) return <p>Loading...</p>
-  if (error) return <p>Error: {error.message}</p>
-
-  const transformedData = data.map((item) => {
-    const voice = item.voices[0] // Assuming there's only one voice per item
-    return {
-      id: item.id,
-      uid: item.uid,
-      voice_name: voice?.voice_name,
-      voice_speed: voice?.voice_speed,
-      text: voice?.text,
-      character_count: voice?.character_count
-    }
-  })
+  const { data: voiceData } = useGetAllUserTextToVoiceData(userId)
+  const data = voiceData?.data?.data || []
 
   return (
     <div className="container p-4 mx-auto border rounded-2xl">
-      <MyFilesDataTable columns={columns} data={transformedData} />
+      <MyFilesDataTable columns={columns} data={data} />
     </div>
   )
 }
