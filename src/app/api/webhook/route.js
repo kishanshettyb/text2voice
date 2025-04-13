@@ -64,6 +64,7 @@ async function savePaymentDataToDatabase(data) {
         'Content-Type': 'application/json'
       }
     })
+    console.log('saved Payment data to payment table')
     return response.data
   } catch (error) {
     console.error('Error saving payment data:', error)
@@ -90,13 +91,27 @@ async function updateSubscriptionTable(customerEmail, stripe_subscription_id, pr
       return
     }
     let updatedPlan
-    if (
-      productIds.some(
-        (product) => product.id === process.env.NEXT_PUBLIC_CREATOR_MONTHLY_PRODUCT_ID
-      )
-    ) {
-      updatedPlan = process.env.NEXT_PUBLIC_CREATOR_MONTHLY_PLAN_ID
+    const planMap = {
+      [process.env.NEXT_PUBLIC_CREATOR_MONTHLY_PRODUCT_ID]:
+        process.env.NEXT_PUBLIC_CREATOR_MONTHLY_PLAN_ID,
+      [process.env.NEXT_PUBLIC_UNLIMITED_MONTHLY_PRODUCT_ID]:
+        process.env.NEXT_PUBLIC_UNLIMITED_MONTHLY_PLAN_ID,
+      [process.env.NEXT_PUBLIC_CREATOR_YEARLY_PRODUCT_ID]:
+        process.env.NEXT_PUBLIC_CREATOR_YEARLY_PLAN_ID,
+      [process.env.NEXT_PUBLIC_UNLIMITED_YEARLY_PRODUCT_ID]:
+        process.env.NEXT_PUBLIC_UNLIMITED_YEARLY_PLAN_ID
     }
+    const matchingProduct = productIds.find((product) => planMap[product.id])
+    if (matchingProduct) {
+      updatedPlan = planMap[matchingProduct.id]
+    }
+    // if (
+    //   productIds.some(
+    //     (product) => product.id === process.env.NEXT_PUBLIC_CREATOR_MONTHLY_PRODUCT_ID
+    //   )
+    // ) {
+    //   updatedPlan = process.env.NEXT_PUBLIC_CREATOR_MONTHLY_PLAN_ID
+    // }
     // Update subscription table
     const subscriptionUpdateData = {
       data: {

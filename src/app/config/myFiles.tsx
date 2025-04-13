@@ -1,76 +1,136 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { ColumnDef } from '@tanstack/react-table'
 import { Download, Edit2 } from 'lucide-react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import moment from 'moment'
-import { Checkbox } from '@/components/ui/checkbox'
-import { DataTableColumnHeader } from '@/components/DataTableColumnHeader'
 import Link from 'next/link'
+import { ColumnDef } from '@tanstack/react-table'
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type Payment = {
-  id: string
-  character_count: string
+type Voice = {
+  id: number
+  documentId: string
+  text: string
   voice_name: string
   voice_speed: string
+  audio_url: string
+  audio_format: string
+  character_count: number
+  createdAt: string
+  updatedAt: string
+  publishedAt: string
+  users_permissions_user: {
+    id: number
+    documentId: string
+    username: string
+    email: string
+    provider: string
+    confirmed: boolean
+    blocked: boolean
+    createdAt: string
+    updatedAt: string
+    publishedAt: string
+    name?: string | null
+    subscription: {
+      id: number
+      documentId: string
+      start_date: string
+      createdAt: string
+      updatedAt: string
+      publishedAt: string
+      end_date: string
+      subscription_status: string
+      stripe_subscription_id: string
+    }
+  }
 }
 
-export const columns: ColumnDef<Payment>[] = [
-  {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false
-  },
+type DataItem = {
+  id: number
+  documentId: string
+  title: string
+  uid: string
+  createdAt: string
+  updatedAt: string
+  publishedAt: string
+  voices: Voice[]
+}
 
+export const columns: ColumnDef<DataItem>[] = [
   {
     accessorKey: 'createdAt',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Created Date" />,
+    header: 'Created At',
     cell: ({ row }) => <p>{moment(row.getValue('createdAt')).format('DD MMM YYYY HH:mm a')}</p>,
-    enableSorting: true
+    enableSorting: true,
+    enableResizing: true
+  },
+  {
+    accessorKey: 'title',
+    header: 'Title',
+    cell: (info) => info.getValue(),
+    enableSorting: true,
+    enableResizing: true
+  },
+  {
+    accessorKey: 'voices.0.text',
+    header: 'Text',
+    cell: (info) => {
+      const voices = info.row.original.voices
+      return voices && voices.length > 0 ? (
+        <Popover>
+          <PopoverTrigger>
+            <div className="w-[200px] p-2 border text-left border-slate-100 bg-slate-50 dark:bg-transparent ">
+              <p className="line-clamp-1">{voices[0].text}</p>
+            </div>
+          </PopoverTrigger>
+          <PopoverContent>{voices[0].text}</PopoverContent>
+        </Popover>
+      ) : (
+        'N/A'
+      )
+    },
+    enableSorting: true,
+    enableResizing: true
+  },
+  {
+    accessorKey: 'voices.0.character_count',
+    header: 'Character Count',
+    cell: (info) => {
+      const voices = info.row.original.voices
+      return voices && voices.length > 0 ? (
+        <p className="line-clamp-1">{voices[0].character_count}</p>
+      ) : (
+        'N/A'
+      )
+    },
+    enableSorting: true,
+    enableResizing: true
+  },
+  {
+    accessorKey: 'voices.0.voice_speed',
+    header: 'Voice Speed',
+    cell: (info) => {
+      const voices = info.row.original.voices
+      return voices && voices.length > 0 ? (
+        <p className="line-clamp-1">{voices[0].voice_speed}</p>
+      ) : (
+        'N/A'
+      )
+    },
+    enableSorting: true,
+    enableResizing: true
+  },
+  {
+    accessorKey: 'voices.0.voice_name',
+    header: 'Voice Name',
+    cell: (info) => {
+      const voices = info.row.original.voices
+      return voices && voices.length > 0 ? voices[0].voice_name : 'N/A'
+    },
+    enableSorting: true,
+    enableResizing: true
   },
 
-  {
-    accessorKey: 'character_count',
-    header: 'Character Count'
-  },
-  {
-    accessorKey: 'voice_speed',
-    header: 'Voice Speed'
-  },
-  {
-    accessorKey: 'text',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Text" />,
-    enableSorting: true,
-    cell: ({ row }) => (
-      <Popover>
-        <PopoverTrigger>
-          <div className="w-[200px] p-2 border text-left border-slate-100 bg-slate-50 dark:bg-transparent ">
-            <p className="line-clamp-1">{row.getValue('text')}</p>
-          </div>
-        </PopoverTrigger>
-        <PopoverContent>{row.getValue('text')}</PopoverContent>
-      </Popover>
-    )
-  },
   {
     accessorKey: 'uid',
     header: 'Action',
@@ -85,16 +145,69 @@ export const columns: ColumnDef<Payment>[] = [
     )
   },
   {
-    accessorKey: 'audio_url',
+    accessorKey: 'voices.0.audio_url',
     header: 'Download',
-    cell: ({ row }) => (
-      <div className="flex gap-x-2">
-        <Button asChild variant="outline">
-          <a href={row.getValue('audio_url')} download={row.getValue('audio_url')}>
-            <Download />
-          </a>
+    cell: (info) => {
+      const voices = info.row.original.voices
+      const voicefile = info.row.original.voices[0].audio_url
+      const downloadFile = (src: string) => {
+        const getFileNameFromUrl = (url: string): string => {
+          const parsedUrl = new URL(url) // Parse the URL
+          const pathSegments = parsedUrl.pathname.split('/') // Split the path by "/"
+          return pathSegments[pathSegments.length - 1] // Get the last segment (the file name)
+        }
+
+        // Fetch the file
+        fetch(src)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error('Failed to fetch the file')
+            }
+            return response.blob() // Convert response to blob
+          })
+          .then((blob) => {
+            // Create an object URL for the blob
+            const fileURL = window.URL.createObjectURL(blob)
+
+            // Create a link element and trigger the download
+            const alink = document.createElement('a')
+            alink.href = fileURL
+            alink.download = getFileNameFromUrl(src) // Set the file name from URL
+            alink.click() // Trigger the download
+
+            // Clean up the object URL after download
+            window.URL.revokeObjectURL(fileURL)
+          })
+          .catch((error) => {
+            console.error('Download failed:', error)
+          })
+      }
+
+      return voices && voices.length > 0 ? (
+        <Button onClick={() => downloadFile(voicefile)} variant="outline">
+          <Download />
         </Button>
-      </div>
-    )
+      ) : (
+        'N/A'
+      )
+    }
+    // cell: ({ row }) => (
+    //   <div className="flex gap-x-2">
+    //     <Button variant="outline">
+    //       <Link
+    //         href={row.getValue('voices.0.audio_url')}
+    //         download={row.getValue('voices.0.audio_url')}
+    //       >
+    //         <Download />
+    //       </Link>
+    //     </Button>
+    //     <Link
+    //       href={row.getValue('voices.0.audio_url')}
+    //       download={row.getValue('voices.0.audio_url')}
+    //     >
+    //       <Download />
+    //     </Link>
+    //   </div>
+    // )
   }
 ]

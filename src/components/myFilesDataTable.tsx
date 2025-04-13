@@ -28,11 +28,17 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
   exportData?: boolean
   exportDataName?: string
+  searchText?: string
 }
 
-export function MyFilesDataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+export function MyFilesDataTable<TData, TValue>({
+  columns,
+  data,
+  searchText
+}: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+
   const table = useReactTable({
     data,
     columns,
@@ -51,14 +57,19 @@ export function MyFilesDataTable<TData, TValue>({ columns, data }: DataTableProp
   return (
     <>
       <div className="mb-2 flex flex-row justify-between items-center">
-        <div className="flex items-center py-4">
-          <Input
-            placeholder="Search Text"
-            value={(table.getColumn('text')?.getFilterValue() as string) ?? ''}
-            onChange={(event) => table.getColumn('text')?.setFilterValue(event.target.value)}
-            className="max-w-sm"
-          />
-        </div>
+        {searchText ? (
+          <div className="flex items-center py-4">
+            <Input
+              placeholder={`Search ` + searchText}
+              value={(table.getColumn(searchText)?.getFilterValue() as string) ?? ''}
+              onChange={(event) => table.getColumn(searchText)?.setFilterValue(event.target.value)}
+              className="max-w-sm"
+            />
+          </div>
+        ) : (
+          <></>
+        )}
+
         <div className="flex flex-row items-center justify-between gap-x-2">
           <DataTableColumnViewOptions table={table} />
           {/* <div>{exportData && <ExportData data={data} fileName={exportDataName} />}</div> */}
