@@ -191,23 +191,5 @@ export const columns: ColumnDef<DataItem>[] = [
         'N/A'
       )
     }
-    // cell: ({ row }) => (
-    //   <div className="flex gap-x-2">
-    //     <Button variant="outline">
-    //       <Link
-    //         href={row.getValue('voices.0.audio_url')}
-    //         download={row.getValue('voices.0.audio_url')}
-    //       >
-    //         <Download />
-    //       </Link>
-    //     </Button>
-    //     <Link
-    //       href={row.getValue('voices.0.audio_url')}
-    //       download={row.getValue('voices.0.audio_url')}
-    //     >
-    //       <Download />
-    //     </Link>
-    //   </div>
-    // )
   }
 ]

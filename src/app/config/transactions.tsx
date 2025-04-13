@@ -3,6 +3,7 @@
 import { ColumnDef } from '@tanstack/react-table'
 import moment from 'moment'
 import { DataTableColumnHeader } from '@/components/DataTableColumnHeader'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
 export type Transactions = {
   createdAt: Date
@@ -19,12 +20,29 @@ export const transactioncolumns: ColumnDef<Transactions>[] = [
     enableSorting: true
   },
   {
-    accessorKey: 'amount',
-    header: 'Amount'
+    accessorKey: 'checkout_session_id',
+    header: 'Transaction Id',
+    cell: ({ row }) => {
+      const checkoutSessionId = row.original.checkout_session_id
+      return (
+        <Popover>
+          <PopoverTrigger>
+            <div className="w-[200px] p-2 border text-left border-slate-100 bg-slate-50 dark:bg-transparent ">
+              <p className="line-clamp-1">{checkoutSessionId}</p>
+            </div>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto">{checkoutSessionId}</PopoverContent>
+        </Popover>
+      )
+    }
   },
   {
     accessorKey: 'currency',
     header: 'Currency'
+  },
+  {
+    accessorKey: 'amount',
+    header: 'Amount'
   },
   {
     accessorKey: 'payment_status',
